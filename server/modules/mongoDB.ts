@@ -179,9 +179,11 @@ async function getItemsFromDatabase(
   }
 }
 
-export {
+const mongoFuncs = {
   writeToDatabase,
   modifyInDatabase,
   getItemsFromDatabase,
   deleteFromDatabase
 };
+
+export default mongoFuncs;

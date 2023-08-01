@@ -1,9 +1,14 @@
 {
-  "name": "main",
-  "version": "0.1.0",
+  "name": "schedules-proj",
+  "version": "0.0.10",
   "private": true,
   "dependencies": {
+    "bcrypt": "^5.1.0",
+    "bootstrap": "^5.3.1",
+    "connect-mongodb-session": "^3.1.1",
     "cra-template-typescript": "1.2.0",
+    "dotenv": "^16.3.1",
+    "express-session": "^1.17.3",
     "mongodb": "^5.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -36,5 +41,6 @@
       "last 1 safari version"
     ]
   },
+  "proxy": "http://localhost:3001",
   "type": "module"
 }

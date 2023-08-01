@@ -140,3 +140,6 @@ dist
 
 # misc
 .DS_Store
+
+# local env files
+server/credentials.env
