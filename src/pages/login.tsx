@@ -1,15 +1,18 @@
 import React from 'react';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider } from 'react-helmet-async';
+import ClassHelmet from '../components/ts/pagehead.tsx';
+import '../components/scss/home.module.scss'
 
 const LoginPage: React.FC = () => {
     return (
         <HelmetProvider>
-            <Helmet>
-                <title>Login</title>
-            </Helmet>
-            <div>Login</div>
+            <ClassHelmet page="Login" />
+            <div>
+                <center>
+                </center>
+            </div>
         </HelmetProvider>
     );
-}
+};
 
 export default LoginPage;

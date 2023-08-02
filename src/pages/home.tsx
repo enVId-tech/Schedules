@@ -1,13 +1,19 @@
 import React from 'react';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider } from 'react-helmet-async';
+import ClassHelmet from '../components/ts/pagehead.tsx';
+import HomeContent from '../components/ts/homecontent.tsx';
+import Sidebar from '../components/ts/sidebar.tsx';
 
 const HomePage: React.FC = () => {
     return (
         <HelmetProvider>
-            <Helmet>
-                <title>Home</title>
-            </Helmet>
-            <div>Home</div>
+            <ClassHelmet page="Home" />
+            <div className='home'>
+                <Sidebar />
+                <center>
+                    <HomeContent />
+                </center>
+            </div>
         </HelmetProvider>
     );
 }

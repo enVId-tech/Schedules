@@ -1,23 +1,27 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Navigate, Routes } from 'react-router-dom';
 
 // Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Components
-import HomePage from './pages/home';
-import LoginPage from './pages/login';
+import HomePage from './pages/home.tsx';
+import LoginPage from './pages/login.tsx';
 
 // Render
 const RenderPages: React.FC = () => {
     return (
         <Router>
-            {/* Redirects */}
-            <Route path="/*" element={<Navigate to="/home" />} />
+            <Routes>
+                {/* Redirects */}
+                <Route path="/*" element={<Navigate to="/home" />} />
+                <Route path="/home/*" element={<Navigate to="/home" />} />
+                <Route path="/login/*" element={<Navigate to="/login" />} />
 
-            {/* Pages */}
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
+                {/* Pages */}
+                <Route path="/home" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+            </Routes>
         </Router>
     );
 }

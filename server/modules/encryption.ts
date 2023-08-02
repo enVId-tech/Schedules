@@ -1,6 +1,9 @@
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 
+const encryptionKey: Buffer = crypto.scryptSync('passphrase', 'salt', 32); // Deriving a secure encryption key using scrypt
+const iv: Buffer = crypto.randomBytes(16); // 16 bytes for AES-256-GCM
+
 type GenerationType = 'number' | 'string' | 'alphanumeric' | 'both';
 
 function getRandomIndex(max: number): number {
@@ -14,38 +17,40 @@ function getRandomIndex(max: number): number {
  * @returns {string} - The generated random value
  */
 function generateRandomNumber(numberOfDigits: number, type: GenerationType): string {
-  const digits: string = '0123456789';
-  const characters: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  const alphanumeric: string = digits + characters;
-  let validCharacters = '';
-  switch (type) {
-    case 'number':
-      validCharacters = digits;
-      break;
-    case 'string':
-      validCharacters = characters;
-      break;
-    case 'alphanumeric':
-      validCharacters = alphanumeric;
-      break;
-    case 'both':
-      validCharacters = digits + characters;
-      break;
-    default:
-      throw new Error('Invalid type of generation, valid types are: number, string, alphanumeric, both');
-  }
+  try {
+    const digits: string = '0123456789';
+    const characters: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const alphanumeric: string = digits + characters;
+    let validCharacters = '';
+    switch (type) {
+      case 'number':
+        validCharacters = digits;
+        break;
+      case 'string':
+        validCharacters = characters;
+        break;
+      case 'alphanumeric':
+        validCharacters = alphanumeric;
+        break;
+      case 'both':
+        validCharacters = digits + characters;
+        break;
+      default:
+        throw new Error('Invalid type of generation, valid types are: number, string, alphanumeric, both');
+    }
 
-  let randomNumber: string = '';
-  for (let i = 0; i < numberOfDigits; i++) {
-    const randomIndex = getRandomIndex(validCharacters.length);
-    randomNumber += validCharacters[randomIndex];
-  }
+    let randomNumber: string = '';
+    for (let i = 0; i < numberOfDigits; i++) {
+      const randomIndex = getRandomIndex(validCharacters.length);
+      randomNumber += validCharacters[randomIndex];
+    }
 
-  return randomNumber;
+    return randomNumber;
+  } catch (error: any) {
+    console.error(`Error generating random number: ${error}`);
+    throw new Error(error);
+  }
 }
-
-const encryptionKey: Buffer = crypto.scryptSync('passphrase', 'salt', 32); // Deriving a secure encryption key using scrypt
-const iv: Buffer = crypto.randomBytes(16); // 16 bytes for AES-256
 
 /**
  * Encrypts the given plaintext password using bcrypt
@@ -57,9 +62,9 @@ async function encryptPassword(myPlaintextPassword: string, saltRounds: number =
   try {
     const hash: string = await bcrypt.hash(myPlaintextPassword, saltRounds);
     return hash;
-  } catch (err) {
-    console.error(err);
-    throw err;
+  } catch (error: any) {
+    console.error(error);
+    throw new Error(error);
   }
 }
 
@@ -69,10 +74,15 @@ async function encryptPassword(myPlaintextPassword: string, saltRounds: number =
  * @returns {string} - The hashed password
  */
 function permanentEncryptPassword(myPlaintextPassword: string): string {
-  const hash: any = crypto.createHash('sha256');
-  const data: any = hash.update(myPlaintextPassword, 'utf-8')
-  const digest: string = data.digest('hex');
-  return digest
+  try {
+    const hash: any = crypto.createHash('sha256');
+    const data: any = hash.update(myPlaintextPassword, 'utf-8')
+    const digest: string = data.digest('hex');
+    return digest;
+  } catch (error: any) {
+    console.error(error);
+    throw new Error(error);
+  }
 }
 
 /**
@@ -84,9 +94,9 @@ function permanentEncryptPassword(myPlaintextPassword: string): string {
 async function comparePassword(password: string, hashedPassword: string): Promise<boolean> {
   try {
     return await bcrypt.compare(password, hashedPassword);
-  } catch (err) {
-    console.error(err);
-    throw err;
+  } catch (error: any) {
+    console.error(error);
+    throw new Error(error);
   }
 }
 
@@ -115,9 +125,9 @@ async function encryptData(
     const authTag = cipher.getAuthTag();
 
     return { encryptedData, authTag };
-  } catch (err) {
-    console.error(err);
-    throw err;
+  } catch (error: any) {
+    console.error(error);
+    throw new Error(error);
   }
 }
 
@@ -134,9 +144,9 @@ async function decryptData(encryptedData: string, authTag: Buffer): Promise<stri
     let decryptedData = decipher.update(encryptedData, 'hex', 'utf8');
     decryptedData += decipher.final('utf8');
     return decryptedData;
-  } catch (err) {
-    console.error(err);
-    throw err;
+  } catch (error: any) {
+    console.error(error);
+    throw new Error(error);
   }
 }
 
@@ -146,7 +156,12 @@ async function decryptData(encryptedData: string, authTag: Buffer): Promise<stri
  * @returns {string} - Encrypted IP address
  */
 function encryptIP(ip: string): string {
+  try {
   return ip.split('.').map(part => parseInt(part, 10).toString(16)).join('');
+  } catch (error: any) {
+    console.error(error);
+    throw new Error(error);
+  }
 }
 
 // Export all the functions as a single object with a common name

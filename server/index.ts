@@ -16,19 +16,27 @@ const MongoDBStore = connectMongoDBSession(session);
 
 const SECRET: string = encrypts.permanentEncryptPassword(encrypts.generateRandomNumber(256, "alphanumeric"))
 
+const uri: string = process.env.MONGO_URI!;
+
+const store = new MongoDBStore({
+    uri: uri,
+    collection: "SchedulesUsers",
+    expires: 1000 * 60 * 60 * 24 * 7, // 1 week
+    databaseName: process.env.CLIENT_DB,
+    idField: "_id",
+    expiresKey: "sessionTime",
+    expiresAfterSeconds: 1000 * 60 * 60 * 24 * 7 // 1 week
+})
+
+store.on("error", (error: any) => {
+    console.error(`Error connecting to MongoDB: ${error}`);
+});
+
 app.use(session({
     secret: SECRET,
     resave: false,
-    saveUninitialized: true,
-    store: new MongoDBStore({
-        uri: process.env.MONGO_URI,
-        databaseName: process.env.CLIENT_DB,
-        collection: "SchedulesUsers",
-        expires: 1000 * 60 * 60 * 24 * 7, // 1 week
-        autoRemove: "interval",
-        autoRemoveInterval: 1000 /* Milliseconds */ * 10 /* Seconds */
-    })
-}))
+    saveUninitialized: true
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -41,14 +49,31 @@ var loggedIn: boolean = false;
 var tempDataIDNum: number = 0;
 var mainServerAuthTag: string = "";
 
+// Interfaces
+interface UserData {
+    displayName: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    profilePicture: string;
+    hd: string;
+    hasSchedule: boolean;
+    schedule: object;
+    siteUsername: string;
+    sitePassword: string;
+    settings: object;
+    dataIDNum: number;
+    sessionTime: number;
+}
+
 // Server Ports
-const PORT = process.env.PORT || 3001;
-const CLIENT_PORT = process.env.CLIENT_PORT || 3000;
+const PORT: any = process.env.PORT! || 3001;
+const CLIENT_PORT: any = process.env.CLIENT_PORT || 3000;
 const CLIENT_URL = `http://localhost:${CLIENT_PORT}`;
 
 // Google OAuth2 Credentials
-const GOOGLE_CLIENT_ID = process.env.CLIENT_ID;
-const GOOGLE_CLIENT_SECRET = process.env.CLIENT_SECRET;
+const GOOGLE_CLIENT_ID: string = process.env.CLIENT_ID!;
+const GOOGLE_CLIENT_SECRET: string = process.env.CLIENT_SECRET!;
 
 // App hostname
 const APP_HOSTNAME = process.env.HOSTNAME || "localhost";
@@ -72,23 +97,6 @@ passport.use(new GoogleStrategy({
         return done(null, profile);
     }
 ));
-
-// User Data Interface
-interface UserData {
-    displayName: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    profilePicture: string;
-    hd: string;
-    hasSchedule: boolean;
-    schedule: object;
-    siteUsername: string;
-    sitePassword: string;
-    settings: object;
-    dataIDNum: number;
-    sessionTime: number;
-}
 
 // Google Login Page
 app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
@@ -150,12 +158,14 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
 
                     loggedIn = true;
 
-                    res.redirect(`${CLIENT_URL}/dashboard/${randomNumber}`);
+                    res.sendStatus(200).send("ok");
                 } else {
                     
                 }
+            } else {
+                res.sendStatus(401).send("unauthorized");
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error(`Error authenticating user: ${error}`);
             throw new Error(error);
         }
@@ -166,7 +176,7 @@ try {
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });
-} catch (error) {
+} catch (error: any) {
     console.error(`Error starting server: ${error}`);
     throw new Error(error);
 }

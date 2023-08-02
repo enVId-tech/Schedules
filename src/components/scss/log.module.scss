@@ -1,0 +1,166 @@
+html {
+    font-family: Arial, Helvetica, sans-serif;
+
+    body {
+        background-color: #1f1f1f;
+        color: white;
+        padding-top: 1.5%;
+    }
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    font-size: 10px;
+    align-self: center;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+#LoginLabel {
+    font-size: 30px;
+    font-weight: 100;
+    font-family: 'Work Sans', sans-serif;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+.LoginContainer {
+    margin-top: 13%;
+    width: 20%;
+    height: 60%;
+    background-color: rgb(39, 39, 39);
+    text-align: center;
+    color: white;
+    z-index: 10000;
+    padding-bottom: 30px;
+    padding-top: 120px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    position: relative;
+    /* Add position relative */
+
+}
+
+#username,
+#password {
+    $margin: 0;
+    color: white;
+    background-color: transparent;
+    border-top-width: $margin;
+    border-left-width: $margin;
+    border-right-width: $margin;
+    border-bottom-width: 2px;
+    border-radius: 0;
+    width: 70%;
+    position: relative;
+    transition: border-bottom-color 0.1s linear;
+
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 30px rgb(39, 39, 39) inset !important;
+        -webkit-text-fill-color: white !important;
+        box-shadow: 0 0 0 30px rgb(39, 39, 39) inset !important;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    &::selection {
+        background-color: rgba(0, 116, 255, 0.8);
+        width: 200px;
+        height: 30px;
+    }
+}
+
+
+#BackgroundImage {
+    position: absolute;
+    /* Add absolute positioning */
+    background-image: url(../images/LoginBackground.jpg);
+    bottom: 75%;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: 0;
+    /* Set a higher z-index value */
+}
+
+.googlesignin {
+    background-color: transparent;
+    border-width: 0;
+    color: white;
+    font-size: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-family: 'Work Sans', sans-serif;
+
+    &:hover {
+        background-color: transparent;
+        color: white;
+    }
+}
+
+#Profile {
+    float: right;
+    background-color: transparent;
+    transition: background-color 0.1s linear;
+    border-radius: 10px;
+
+    &:hover {
+        background-color: #00ffc3;
+        color: black;
+    }
+}
+
+#LoginButton {
+    width: 70%;
+    background-color: rgb(0, 174, 255);
+    height: 45px;
+    border-radius: 10px;
+    border-width: 0;
+    font-size: large;
+    font-weight: bold;
+}
+
+.desktoptopnav {
+    background-color: rgb(24, 24, 24);
+    position: fixed;
+    top: 0;
+    overflow: auto;
+    width: 100%;
+    z-index: 10000;
+
+    & button:not(.img) {
+        float: left;
+        text-align: center;
+        padding: 4px 16px;
+        text-decoration: none;
+        color: white;
+        font-size: 15px;
+        background-color: transparent;
+        border-width: 0;
+    }
+}
+
+.content {
+    align-content: center;
+}
+
+#Error {
+    font-size: 20px;
+    color: red;
+}
+
+#LogoutTitle {
+    font-size: 30px;
+    font-weight: 100;
+    font-family: 'Work Sans', sans-serif;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}

@@ -23,8 +23,8 @@ async function connectToDatabase(log?: boolean): Promise<void> {
     if (log) {
       console.log("Connected to MongoDB");
     }
-  } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
+  } catch (error: any) {
+    console.error(`Error connecting to MongoDB:${error}`);
     throw new Error(error);
   }
 }
@@ -52,9 +52,9 @@ async function writeToDatabase(
 
 
     return result.insertedId;
-  } catch (error) {
-    console.error('Error writing to database:', error);
-    throw new Error('Error writing data to the database.');
+  } catch (error: any) {
+    console.error(`Error writing to database: ${error}`);
+    throw new Error(error);
   }
 }
 /**
@@ -88,8 +88,8 @@ async function modifyInDatabase(
     }
 
     return result.modifiedCount;
-  } catch (error) {
-    console.error("Error modifying document:", error);
+  } catch (error: any) {
+    console.error(`Error modifying document:, ${error}`);
     throw new Error(error);
   }
 }
@@ -138,8 +138,8 @@ async function deleteFromDatabase(
 
     // Add a default return value for any other cases
     return undefined;
-  } catch (error) {
-    console.error("Error deleting document(s):", error);
+  } catch (error: any) {
+    console.error(`Error deleting document(s):, ${error}`);
     throw new Error(error);
   }
 }
@@ -173,9 +173,9 @@ async function getItemsFromDatabase(
     }
 
     return JSON.stringify(items);
-  } catch (error) {
-    console.error('Error getting items from database:', error);
-    throw new Error('Error fetching items from the database.');
+  } catch (error: any) {
+    console.error(`Error getting items from database:, ${error}`);
+    throw new Error(error);
   }
 }
 
