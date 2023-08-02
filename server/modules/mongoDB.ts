@@ -154,8 +154,8 @@ async function deleteFromDatabase(
  */
 async function getItemsFromDatabase(
   collectionName: string,
-  dataId?: any,
-  log: boolean = false
+  log: boolean = false,
+  dataId?: any
 ): Promise<string> {
   try {
     await connectToDatabase(log);
