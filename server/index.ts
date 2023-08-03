@@ -1,25 +1,32 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
+// Libraries
 import connectMongoDBSession from "connect-mongodb-session";
+import dotenv from "dotenv";
+import express, { Express, Request, Response } from "express";
 import session from "express-session";
-import { OAuth2Strategy as GoogleStrategy } from "passport-google-oauth";
-import passport from "passport";
-import mongoFuncs from "./modules/mongoDB";
-import encrypts from "./modules/encryption"
 import mongoose from "mongoose";
+import passport from "passport";
+import { OAuth2Strategy as GoogleStrategy } from "passport-google-oauth";
+import encrypts from "./modules/encryption.ts";
+import mongoFuncs from "./modules/mongoDB.ts";
 
+// Express Initialization
 const app: Express = express();
 app.use(express.static("public"));
 
-const MongoDBStore = connectMongoDBSession(session);
+//Library Initialization
+app.use(express.json());
+app.set("trust proxy", true)
+
+// DotENV Credentials
+dotenv.config({ path: "./server/credentials.env.local" });
 
 const SECRET: string = encrypts.permanentEncryptPassword(encrypts.generateRandomNumber(256, "alphanumeric"))
 
-const uri: string = process.env.MONGO_URI!;
-
+// MongoDB Credentials
+const MongoDBStore = connectMongoDBSession(session);
 const store = new MongoDBStore({
-    uri: uri,
+    uri: process.env.MONGODB_URI!,
     collection: "SchedulesUsers",
     expires: 1000 * 60 * 60 * 24 * 7, // 1 week
     databaseName: process.env.CLIENT_DB,
@@ -35,16 +42,18 @@ store.on("error", (error: any) => {
 app.use(session({
     secret: SECRET,
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    store: store,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 3.5, // 3.5 days
+    }
 }));
 
+// Passport Initialization
 app.use(passport.initialize());
 app.use(passport.session());
 
-// DotENV Credentials
-dotenv.config({ path: "./server/credentials.env" });
-
-// Globals
+// Global Variables
 var loggedIn: boolean = false;
 var tempDataIDNum: number = 0;
 var mainServerAuthTag: string = "";
@@ -145,7 +154,7 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
                             isLoggedIn: true,
                             isTerminated: false,
                             latestIP: encrypts.encryptIP(req.ip),
-                            
+
                         },
                         dataIDNum: fileDataJSON.length,
                         sessionTime: 1000 * 60 * 60 * 24 * 3.5 // 3.5 days
@@ -160,7 +169,7 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
 
                     res.sendStatus(200).send("ok");
                 } else {
-                    
+
                 }
             } else {
                 res.sendStatus(401).send("unauthorized");
@@ -186,10 +195,7 @@ process.on("SIGINT", async () => {
 
     await mongoFuncs.deleteFromDatabase({}, "SchedulesUsers", "many", true)
 
-    // Close the database connection if it is open
-    if (mongoose.connection.readyState === 1) {
-        await mongoose.connection.close();
-    }
+    await mongoose.connection.close();
 
     process.exit();
 });

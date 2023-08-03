@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
-import { MongoClient, Filter, DeleteResult, UpdateResult, Db, Collection } from 'mongodb';
+import { Collection, Db, DeleteResult, Filter, MongoClient, UpdateResult } from 'mongodb';
 
 //Credentials
 import dotenv from 'dotenv';
-dotenv.config({ path: './node/credentials.env' });
-const uri: any = process.env.MONGO_URI;
-const clientDB: any = process.env.CLIENT_DB;
+dotenv.config({ path: './server/credentials.env.local' });
+const uri: string = process.env.MONGODB_URI!;
+const clientDB: string = process.env.CLIENT_DB!;
 const client: MongoClient = new MongoClient(uri);
 
 interface DatabaseItem {
@@ -41,7 +41,7 @@ async function connectToDatabase(log?: boolean): Promise<void> {
 async function writeToDatabase(
   data: any,
   collectionName: string,
-  log: boolean = false
+  log: boolean
 ): Promise<any> {
   try {
     await connectToDatabase(log);
@@ -154,7 +154,7 @@ async function deleteFromDatabase(
  */
 async function getItemsFromDatabase(
   collectionName: string,
-  log: boolean = false,
+  log?: boolean,
   dataId?: any
 ): Promise<string> {
   try {

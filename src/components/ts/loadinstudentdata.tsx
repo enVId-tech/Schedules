@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useEffect, useState } from 'react';
-import logout from './logout';
+import logout from './logout.tsx';
 
 interface UserInformation {
     displayName: string;

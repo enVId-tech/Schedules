@@ -1,6 +1,6 @@
 {
   "name": "schedules-proj",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "private": true,
   "dependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -24,13 +24,14 @@
     "react-router-dom": "^6.14.2",
     "react-scripts": "5.0.1",
     "sass": "^1.64.2",
-    "ts-node": "^10.9.1"
+    "typescript": "^5.1.6"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "serverstart": "nodemon --exec ts-node --esm server/index.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -55,6 +56,7 @@
   "devDependencies": {
     "@types/express": "^4.17.17",
     "@types/react": "^18.2.18",
-    "@types/react-dom": "^18.2.7"
+    "@types/react-dom": "^18.2.7",
+    "ts-node": "^10.9.1"
   }
 }
