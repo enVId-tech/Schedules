@@ -1,6 +1,6 @@
 {
   "name": "schedules-proj",
-  "version": "0.0.31",
+  "version": "0.0.40",
   "private": true,
   "dependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -27,7 +27,7 @@
     "typescript": "^5.1.6"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "reactstart": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

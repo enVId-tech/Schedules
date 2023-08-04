@@ -16,6 +16,14 @@
       {
         "image-alt": "off"
       }
-    ]
-  }
+    ],
+    "meta-viewport": "off"
+  },
+  "browserslist": [
+    "defaults",
+    "not ie 11",
+    "not and_ff <= 115",
+    "not firefox <= 114",
+    "not firefox <= 115"
+  ]
 }
