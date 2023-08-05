@@ -1,8 +1,10 @@
-body {
-}
-
 #Schedules {
+    font-family: Work Sans, sans-serif;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
 }
 
 .Student {
@@ -16,7 +18,7 @@ body {
     padding-bottom: 0.25vh;
     border-radius: 20px;
     text-align: center;
-    background-color:rgb(39, 39, 39);
+    background-color: rgb(39, 39, 39);
     height: fit-content;
 }
 
@@ -41,17 +43,46 @@ body {
     border-radius: 20px;
 }
 
+#LogoText {
+    font-size: 2vw;
+    font-weight: 100;
+    font-family: 'Work Sans', sans-serif;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+#Logo {
+    width: 10vw;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+#Menu {
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-left: 1vw;
+    padding-right: 1vw;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Montserrat, sans-serif;
+}
+
 #Sidebar {
     width: fit-content;
     height: 100vh;
     background-color: rgb(20, 20, 20);
-    
     overflow-x: hidden;
     overflow-y: auto;
     padding-top: 1vh;
     padding-left: 1vw;
     padding-right: 1vw;
     z-index: 50;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    font-family: Montserrat, sans-serif;
 }
 
 #schedulespage {
@@ -64,6 +95,27 @@ body {
     background-color: rgb(48, 48, 48);
     font-family: Arial, Helvetica, sans-serif;
     color: white;
+}
+
+#Students {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    overflow-y: auto;
+}
+
+#SchedulesLabel {
+    font-size: 2.5vw;
+    transition: font-size 1s ease-in-out;
+}
+
+#LoggedIn {
+    font-size: 1.5vw;
+    font-weight: 100;
+    font-family: 'Work Sans', sans-serif;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    transition: font-size 1s ease-in-out;
 }
 
 /* Login Page */
@@ -121,7 +173,8 @@ body {
     height: 100%;
 }
 
-#username, #password {
+#username,
+#password {
     background-color: transparent;
     color: white;
     border-top-width: 0;
@@ -137,11 +190,13 @@ body {
     position: relative;
 }
 
-#username:focus, #password:focus {
+#username:focus,
+#password:focus {
     outline: none;
 }
 
-#username::selection, #password::selection {
+#username::selection,
+#password::selection {
     background-color: rgba(0, 116, 255, 0.8);
     width: 10.4vw;
     height: 2.77vh;
@@ -258,6 +313,13 @@ body {
     align-items: center;
     justify-content: center;
     justify-items: center;
+    width: 100%;
+}
+
+#line {
+    width: 100%;
+    height: 0;
+    background-color: rgb(39, 39, 39);
 }
 
 #YourPeriods {
@@ -268,11 +330,32 @@ body {
     margin-right: 1vw;
     margin-top: 0.5vh;
     margin-bottom: 0.5vh;
-    border-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
     overflow-y: auto;
 }
 
-#VisitedPeriods {
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgb(39, 39, 39);
+    border-radius: 25px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 25px;
+    background: rgb(65, 65, 65);
+}
+
+#PeriodsRecent {
     height: 75vh;
     width: 40vw;
     background-color: rgba(36, 36, 36, 0.8);
@@ -281,6 +364,9 @@ body {
     margin-top: 0.5vh;
     margin-bottom: 0.5vh;
     border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .PersonalPeriodSelection {
@@ -292,8 +378,6 @@ body {
     align-items: center;
     margin-top: 0.5vh;
     margin-bottom: 0.5vh;
-    margin-left: 0.5vw;
-    padding-right: 0.5vw;
     border-radius: 20px;
     background-color: rgb(26, 26, 26);
 }
@@ -316,4 +400,80 @@ body {
 
 .PeriodInput:focus {
     outline: none;
+}
+
+#PeriodsLabelMain {
+    font-size: 2vw;
+    font-family: 'Work Sans', sans-serif;
+}
+
+#main2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+}
+
+#home {
+    font-size: 70px;
+    font-weight: 100;
+}
+
+#Visited {
+    height: 34vh;
+    width: 37vw;
+    background-color: rgba(26, 26, 26, 0.8);
+    margin-left: 1vw;
+    margin-right: 1vw;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    overflow-y: auto;
+}
+
+#Saved {
+    height: 34vh;
+    width: 37vw;
+    background-color: rgba(26, 26, 26, 0.8);
+    margin-left: 1vw;
+    margin-right: 1vw;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    overflow-y: auto;
+}
+
+#VisitedRecent {
+    animation: fontchange 3s ease-in-out forwards;
+}
+
+#SavedRecent {
+    animation: fontchange 3s ease-in-out forwards;
+}
+
+@keyframes fontchange {
+    0% {
+        font-size: 0px;
+        display: block;
+    }
+
+    40% {
+        font-size: 50px;
+        opacity: 1;
+    }
+
+    100% {
+        font-size: 50px;
+        display: none;
+        opacity: 0;
+    }
 }

@@ -53,36 +53,13 @@ const LoadInStudentData: React.FC = () => {
         }
     }
 
-    const handleSidebarButtonClick = (link: string): void => {
-        window.location.replace(link);
-    }
-
     return (
-        <>
-            <div className='sidebar-item'>
-                <div className='img' id='LeftImg'>
-                    <img
-                        id='ProfilePicture'
-                        src={profilePicture}
-                        className='image'
-                        referrerPolicy='no-referrer'
-                    />
-                    <br />
-                    <h4 id='Loggedinas'>Logged in as<br/>{userDisplayName}</h4>
-                </div>
-            </div>
-            <div className='sidebar-item'>
-                <button className='sidebar-label' onClick={() => handleSidebarButtonClick('/')}>
-                    Home
-                </button>
-            </div>
-            <div className='sidebar-item'>
-                <button className='sidebar-label' onClick={() => handleSidebarButtonClick('/schedule')}>
-                    Schedule
-                </button>
-            </div>
-        </>
-    )
+        <div>
+            <h1>{userDisplayName}</h1>
+            <img src={profilePicture} />
+            <h1>{firstName}</h1>
+        </div>
+    );
 }
 
 export default LoadInStudentData;
