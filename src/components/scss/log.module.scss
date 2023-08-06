@@ -1,24 +1,21 @@
-html {
-    font-family: Arial, Helvetica, sans-serif;
+/* Login Page */
 
-    body {
-        background-color: #1f1f1f;
-        color: white;
-        padding-top: 1.5%;
-    }
-}
-
-footer {
+#loginpage {
     position: fixed;
-    bottom: 0;
-    font-size: 10px;
-    align-self: center;
-    left: 50%;
-    transform: translate(-50%, 0);
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(31, 31, 31);
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    align-items: center;
+    justify-content: center;
 }
 
 #LoginLabel {
-    font-size: 30px;
+    font-size: 1.56vw;
     font-weight: 100;
     font-family: 'Work Sans', sans-serif;
     margin-top: 20px;
@@ -26,69 +23,76 @@ footer {
 }
 
 .LoginContainer {
-    margin-top: 13%;
-    width: 20%;
-    height: 60%;
+    width: 19vw;
+    height: 43vh;
     background-color: rgb(39, 39, 39);
     text-align: center;
     color: white;
     z-index: 10000;
-    padding-bottom: 30px;
-    padding-top: 120px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     position: relative;
-    /* Add position relative */
-
+    margin-top: 50px;
 }
-
-#username,
-#password {
-    $margin: 0;
-    color: white;
-    background-color: transparent;
-    border-top-width: $margin;
-    border-left-width: $margin;
-    border-right-width: $margin;
-    border-bottom-width: 2px;
-    border-radius: 0;
-    width: 70%;
-    position: relative;
-    transition: border-bottom-color 0.1s linear;
-
-    &:-webkit-autofill,
-    &:-webkit-autofill:hover,
-    &:-webkit-autofill:focus,
-    &:-webkit-autofill:active {
-        -webkit-box-shadow: 0 0 0 30px rgb(39, 39, 39) inset !important;
-        -webkit-text-fill-color: white !important;
-        box-shadow: 0 0 0 30px rgb(39, 39, 39) inset !important;
-    }
-
-    &:focus {
-        outline: none;
-    }
-
-    &::selection {
-        background-color: rgba(0, 116, 255, 0.8);
-        width: 200px;
-        height: 30px;
-    }
-}
-
 
 #BackgroundImage {
     position: absolute;
-    /* Add absolute positioning */
-    background-image: url(../images/LoginBackground.jpg);
-    bottom: 75%;
+    background-image: url(LoginBackground.jpg);
+    bottom: 100%;
     left: 0;
     width: 100%;
     height: 50%;
     background-repeat: no-repeat;
     background-size: cover;
     z-index: 0;
-    /* Set a higher z-index value */
+}
+
+#MainLogin {
+    position: relative;
+    z-index: 10000;
+    height: 100%;
+}
+
+#username,
+#password {
+    background-color: transparent;
+    color: white;
+    border-top-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 2px;
+    border-radius: 0;
+    width: 70%;
+    font-size: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-family: 'Work Sans', sans-serif;
+    position: relative;
+}
+
+#username:focus,
+#password:focus {
+    outline: none;
+}
+
+#username::selection,
+#password::selection {
+    background-color: rgba(0, 116, 255, 0.8);
+    width: 10.4vw;
+    height: 2.77vh;
+}
+
+#username:-webkit-autofill,
+#username:-webkit-autofill:hover,
+#username:-webkit-autofill:focus,
+#username:-webkit-autofill:active,
+#password:-webkit-autofill,
+#password:-webkit-autofill:hover,
+#password:-webkit-autofill:focus,
+#password:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px rgb(39, 39, 39) inset !important;
+    -webkit-text-fill-color: white !important;
+    box-shadow: 0 0 0 30px rgb(39, 39, 39) inset !important;
 }
 
 .googlesignin {
@@ -100,10 +104,11 @@ footer {
     margin-bottom: 10px;
     font-family: 'Work Sans', sans-serif;
 
-    &:hover {
-        background-color: transparent;
-        color: white;
-    }
+}
+
+.googlesignin:hover {
+    background-color: transparent;
+    color: white;
 }
 
 #Profile {
@@ -111,11 +116,11 @@ footer {
     background-color: transparent;
     transition: background-color 0.1s linear;
     border-radius: 10px;
+}
 
-    &:hover {
-        background-color: #00ffc3;
-        color: black;
-    }
+#Profile:hover {
+    background-color: #00ffc3;
+    color: black;
 }
 
 #LoginButton {
@@ -135,17 +140,17 @@ footer {
     overflow: auto;
     width: 100%;
     z-index: 10000;
+}
 
-    & button:not(.img) {
-        float: left;
-        text-align: center;
-        padding: 4px 16px;
-        text-decoration: none;
-        color: white;
-        font-size: 15px;
-        background-color: transparent;
-        border-width: 0;
-    }
+.desktoptopnav button:not(.img) {
+    float: left;
+    text-align: center;
+    padding: 4px 16px;
+    text-decoration: none;
+    color: white;
+    font-size: 15px;
+    background-color: transparent;
+    border-width: 0;
 }
 
 .content {

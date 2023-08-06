@@ -14,7 +14,6 @@ const RenderPages: React.FC = () => {
         <Router>
             <Routes>
                 {/* Redirects */}
-                <Route path="/*" element={<Navigate to="/home" />} />
                 <Route path="/home/*" element={<Navigate to="/home" />} />
                 <Route path="/login/*" element={<Navigate to="/login" />} />
 

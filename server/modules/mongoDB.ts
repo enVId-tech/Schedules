@@ -1,13 +1,13 @@
 /* eslint-disable no-unused-vars */
 import { Collection, Db, DeleteResult, Filter, MongoClient, UpdateResult } from 'mongodb';
+import { URI, CLIENT_DB } from '../configs/env.ts';
+import mongoose from 'mongoose';
 
-//Credentials
-import dotenv from 'dotenv';
-dotenv.config({ path: './server/credentials.env.local' });
-const uri: string = process.env.MONGODB_URI!;
-const clientDB: string = process.env.CLIENT_DB!;
-const client: MongoClient = new MongoClient(uri);
+mongoose.connect(URI, {
+  dbName: CLIENT_DB
+});
 
+const client: MongoClient = new MongoClient(URI);
 interface DatabaseItem {
   dataIDNum: any;
 }
@@ -74,7 +74,7 @@ async function modifyInDatabase(
   try {
     await connectToDatabase(log);
 
-    const database = client.db(clientDB);
+    const database = client.db(CLIENT_DB);
     const collection = database.collection(collectionName);
 
     const { _id, ...updateData } = update;
@@ -111,7 +111,7 @@ async function deleteFromDatabase(
   try {
     await connectToDatabase(log);
 
-    const database = client.db(clientDB);
+    const database = client.db(CLIENT_DB);
     const collection = database.collection(collectionName);
 
     if (type === 1 || type === "one") {
