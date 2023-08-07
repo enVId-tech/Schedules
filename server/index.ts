@@ -3,14 +3,14 @@
 import connectMongoDBSession from "connect-mongodb-session";
 import cors from "cors";
 import express, { Express, Request, Response } from "express";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import session from "express-session";
 import mongoose from "mongoose";
 import passport from "passport";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import "./configs/db.ts";
+import { CLIENT_DB, CLIENT_ID, CLIENT_SECRET, SERVER_PORT } from "./configs/env.ts";
 import encrypts from "./modules/encryption.ts";
 import mongoFuncs from "./modules/mongoDB.ts";
-import { CLIENT_DB, SERVER_PORT, CLIENT_ID, CLIENT_SECRET } from "./configs/env.ts";
-import "./configs/db.ts";
 
 // Express Initialization
 const app: Express = express();
@@ -52,7 +52,7 @@ passport.use(
         {
             clientID: CLIENT_ID,
             clientSecret: CLIENT_SECRET,
-            callbackURL: "/auth/google/callback"
+            callbackURL: "http://localhost:3001/auth/google/callback"
         },
         (accessToken, refreshToken, profile, done) => {
             return done(null, profile);
@@ -71,6 +71,10 @@ passport.deserializeUser((user: any, done: any) => {
 
 app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"], }));
 app.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/login" }), (req: Request, res: Response) => {
+    const user = req.user as any;
+
+    console.log(user);
+
     res.redirect("/home");
 });
 
