@@ -7,6 +7,36 @@ const HomeContent: React.FC = () => {
         window.location.href = page;
     }
 
+    const savePeriods = async () => {
+        let periods = [];
+
+        periods.push((document.getElementById("Period1") as HTMLInputElement).value);
+        periods.push((document.getElementById("Period2") as HTMLInputElement).value);
+        periods.push((document.getElementById("Period3") as HTMLInputElement).value);
+        periods.push((document.getElementById("Period4") as HTMLInputElement).value);
+        periods.push((document.getElementById("Period5") as HTMLInputElement).value);
+        periods.push((document.getElementById("Period6") as HTMLInputElement).value);
+        periods.push((document.getElementById("Period7") as HTMLInputElement).value);
+        periods.push((document.getElementById("Period8") as HTMLInputElement).value);
+
+        const data = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(periods)
+        }
+
+        const fetchData = await fetch('/api/saveperiods', data);
+        const response = await fetchData.json();
+        
+        if (response.status === 'success') {
+            alert('Successfully saved periods!');
+        } else {
+            alert('Failed to save periods!');
+        }
+    }
+        
     return (
         <>
             <span id="homepage">
@@ -72,7 +102,7 @@ const HomeContent: React.FC = () => {
                             </span>
                             <span className="PersonalPeriodSelection">
                                 <h1 className="PeriodNum">00 </h1>
-                                <input type="submit" id="Save" className="PeriodInput" value="Press to Save" />
+                                <input type="submit" id="Save" className="PeriodInput" value="Press to Save" onClick={() => savePeriods()} />
                             </span>
                         </div>
                         <div id="PeriodsRecent">

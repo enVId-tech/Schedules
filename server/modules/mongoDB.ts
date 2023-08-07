@@ -1,16 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { Collection, Db, DeleteResult, Filter, MongoClient, UpdateResult } from 'mongodb';
 import { URI, CLIENT_DB } from '../configs/env.ts';
-import mongoose from 'mongoose';
-
-mongoose.connect(URI, {
-  dbName: CLIENT_DB
-});
 
 const client: MongoClient = new MongoClient(URI);
-interface DatabaseItem {
-  dataIDNum: any;
-}
 
 /**
  * Connects to the MongoDB database
@@ -45,13 +37,22 @@ async function writeToDatabase(
 ): Promise<any> {
   try {
     await connectToDatabase(log);
-    const database: Db = client.db();
-    const collection: Collection<DatabaseItem> = database.collection<DatabaseItem>(collectionName);
+    const database: Db = client.db(CLIENT_DB);
+    const collection: Collection<any> = database.collection(collectionName);
 
-    const result = await collection.insertOne(data);
+    const result: any = await collection.insertOne(data);
 
+    let boolInsert;
 
-    return result.insertedId;
+    if (result.insertedId) {
+      console.log("Inserted document with _id:", result.insertedId);
+      boolInsert = true;
+    } else {
+      console.log("No document was inserted");
+      boolInsert = false;
+    }
+
+    return [result.insertedId, boolInsert];
   } catch (error: any) {
     console.error(`Error writing to database: ${error}`);
     throw new Error(error);
@@ -70,16 +71,16 @@ async function modifyInDatabase(
   update: any, // Change to a more specific type if possible
   collectionName: string,
   log?: boolean
-): Promise<number> {
+): Promise<boolean> {
   try {
     await connectToDatabase(log);
 
-    const database = client.db(CLIENT_DB);
-    const collection = database.collection(collectionName);
+    const database: Db = client.db(CLIENT_DB);
+    const collection: Collection<any> = database.collection(collectionName);
 
-    const { _id, ...updateData } = update;
+    const updateData = { $set: update };
 
-    const result: UpdateResult = await collection.updateOne(filter, { $set: updateData });
+    const result: UpdateResult = await collection.updateOne(filter, updateData);
 
     if (log && result.modifiedCount > 0) {
       console.log("Modified", result.modifiedCount, "document(s)");
@@ -87,7 +88,7 @@ async function modifyInDatabase(
       console.log("No documents modified");
     }
 
-    return result.modifiedCount;
+    return result.modifiedCount > 0;
   } catch (error: any) {
     console.error(`Error modifying document:, ${error}`);
     throw new Error(error);
@@ -156,20 +157,20 @@ async function getItemsFromDatabase(
   collectionName: string,
   log?: boolean,
   dataId?: any
-): Promise<string> {
+): Promise<any> {
   try {
     await connectToDatabase(log);
 
-    const database: Db = client.db();
-    const collection: Collection<DatabaseItem> = database.collection<DatabaseItem>(collectionName);
+    const database: Db = client.db(CLIENT_DB);
+    const collection: Collection<any> = database.collection(collectionName);
+    const projection: any = { _id: 0 };
 
-    const projection = { _id: 0 };
-    let items: DatabaseItem[] = [];
+    let items: any;
 
-    if (!dataId) {
-      items = await collection.find({}, { projection }).toArray();
+    if (dataId) {
+      items = await collection.findOne( dataId, { projection: projection });
     } else {
-      items = await collection.find({ dataIDNum: dataId }, { projection }).toArray();
+      items = await collection.find({}).toArray();
     }
 
     return JSON.stringify(items);
