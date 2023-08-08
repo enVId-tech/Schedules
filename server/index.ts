@@ -4,7 +4,7 @@ import connectMongoDBSession from "connect-mongodb-session";
 import cors from "cors";
 import express, { Express, Request, Response } from "express";
 import session from "express-session";
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import "./configs/db.ts";
@@ -63,6 +63,8 @@ passport.use(
     )
 );
 
+mongoFuncs.deleteFromDatabase({}, "ScheduleSessions", "many", true)
+
 // Google OAuth2 Credentials
 passport.serializeUser((user: any, done: any) => {
     done(null, user);
@@ -75,8 +77,6 @@ passport.deserializeUser((user: any, done: any) => {
 app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"], }));
 app.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/login" }), async (req: Request, res: Response) => {
     const user = req.user as any;
-
-    console.log(user);
 
     const validEmailDomains = ["student.auhsd.us"];
 
@@ -163,8 +163,19 @@ app.post('/api/saveperiods', async (req: Request, res: Response) => {
     }
 });
 
+app.get("/api/getstudentdata", async (req: Request, res: Response) => {
+    const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true, { dataIDNumber: userDataID }));
+    res.send(data);
+});
+
 app.listen(SERVER_PORT, () => {
     console.log(`Server is running on port ${SERVER_PORT}`);
+});
+
+app.get("/api/getteachers", async (req: Request, res: Response) => {
+    const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("TeachersAvailable", true));
+
+    res.send(data);
 });
 
 process.on("SIGINT", async () => {

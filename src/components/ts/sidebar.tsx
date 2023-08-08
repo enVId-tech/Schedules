@@ -1,8 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../scss/sidebar.module.scss';
-import LoadInStudentData from './loadinstudentdata.tsx';
+import LoadInStudentData from './getstudentdata.ts';
 
 const Sidebar: React.FC = () => {
+    const [firstName, setFirstName] = useState<string>("")
+    const [displayName, setDisplayName] = useState<string>("")
+    const [userImg, setUserImg] = useState<string>("")
+
+    useEffect(() => {
+        const loadInData = async () => {
+            const data = await LoadInStudentData();
+            setFirstName(data.firstName);
+            setDisplayName(data.displayName);
+            setUserImg(data.profilePicture);
+        }
+        loadInData();
+    }, [])
+
     const moveToDifferentFile: (page: string) => void = (page: string) => {
         window.location.href = page;
     }
@@ -10,8 +24,8 @@ const Sidebar: React.FC = () => {
     return (
         <div id="Sidebar">
             <div id="Logo">
-                <img src="NotepadTransparent.jpg" alt="Logo" id="LogoImage"/>
-                <p id="LoggedIn">Logged in as <LoadInStudentData /></p>
+                <img src={userImg} alt="Logo" id="LogoImage" />
+                <p id="LoggedIn">Logged in as {firstName}</p>
                 <h1 id="LogoText">Schedules</h1>
             </div>
             <div id="Menu">

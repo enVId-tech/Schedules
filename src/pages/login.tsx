@@ -3,7 +3,7 @@ import React from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import ClassHelmet from '../components/ts/pagehead.tsx';
 import '../components/scss/home.scss';
-import { logIn } from '../components/ts/login.ts';
+import logIn from '../components/ts/login.ts';
 
 const LoginPage: React.FC = () => {
     return (

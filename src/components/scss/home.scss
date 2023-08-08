@@ -4,7 +4,6 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-
 }
 
 .Student {
@@ -49,12 +48,18 @@
     font-family: 'Work Sans', sans-serif;
     margin-top: 20px;
     margin-bottom: 5px;
+    transition: font-size 1s ease-in-out;
 }
 
 #Logo {
-    width: 10vw;
-    margin-top: 20px;
-    margin-bottom: 5px;
+    display: grid;
+    justify-items: center;
+    margin-top: 2vh;
+}
+
+#LogoImage {
+    width: 5vw;
+    border-radius: 100px;
 }
 
 #Menu {
@@ -69,6 +74,15 @@
     font-family: Montserrat, sans-serif;
 }
 
+.MenuText {
+    font-size: 1.5vw;
+    font-weight: 100;
+    font-family: 'Work Sans', sans-serif;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    transition: font-size 1s ease-in-out;
+}
+
 #Sidebar {
     width: fit-content;
     height: 100vh;
@@ -76,8 +90,6 @@
     overflow-x: hidden;
     overflow-y: auto;
     padding-top: 1vh;
-    padding-left: 1vw;
-    padding-right: 1vw;
     z-index: 50;
     display: flex;
     flex-direction: column;
@@ -105,7 +117,8 @@
 }
 
 #SchedulesLabel {
-    font-size: 2.5vw;
+    margin-top: 2vh;
+    font-size: 3.5vw;
     transition: font-size 1s ease-in-out;
 }
 
@@ -115,6 +128,7 @@
     font-family: 'Work Sans', sans-serif;
     margin-top: 20px;
     margin-bottom: 5px;
+    text-align: center;
     transition: font-size 1s ease-in-out;
 }
 
@@ -380,6 +394,7 @@
     margin-bottom: 0.5vh;
     border-radius: 20px;
     background-color: rgb(26, 26, 26);
+    height: 6vh;
 }
 
 .PeriodNum {
@@ -396,6 +411,7 @@
     font-size: 2vw;
     height: 5vh;
     width: 21vw;
+    font-family: Work Sans, sans-serif;
 }
 
 .PeriodInput:focus {
@@ -404,6 +420,7 @@
 
 #PeriodsLabelMain {
     font-size: 2vw;
+    line-height: 80px;
     font-family: 'Work Sans', sans-serif;
 }
 
@@ -458,6 +475,29 @@
 
 #SavedRecent {
     animation: fontchange 3s ease-in-out forwards;
+}
+
+#Save {
+    line-height: 5vh;
+}
+
+#Grades {
+    width: 12vw;
+    background-color: rgba(26, 26, 26, 0.8);
+    margin-left: 1vw;
+    margin-right: 1vw;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    overflow-y: auto;
+}
+
+#P {
+    display: inline-flex;
 }
 
 @keyframes fontchange {

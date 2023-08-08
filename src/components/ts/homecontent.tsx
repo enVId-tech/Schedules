@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../scss/home.scss'
+import Sidebar from './sidebar.tsx';
 
 const HomeContent: React.FC = () => {
+    const [periods, setPeriods] = useState([]);
+    const [grades, setGrades] = useState("7");
 
-    const sendToDifferentPage = (page: string) => {
-        window.location.href = page;
-    }
+    useEffect(() => {
+        getPeriods();
+    }, []);
 
-    const savePeriods = async () => {
+    const savePeriods: () => void = async () => {
         let periods = [];
 
         periods.push((document.getElementById("Period1") as HTMLInputElement).value);
@@ -29,48 +32,57 @@ const HomeContent: React.FC = () => {
 
         const fetchData = await fetch('/api/saveperiods', data);
         const response = await fetchData.json();
-        
+
         if (response.status === 'success') {
             alert('Successfully saved periods!');
         } else {
             alert('Failed to save periods!');
         }
     }
-        
+
+    const getPeriods: () => void = async () => {
+        try {
+            const fetchData = await fetch('/api/getteachers');
+            const response = await fetchData.json();
+
+            setPeriods(response);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <>
             <span id="homepage">
-                <div id="Sidebar">
-                    <div id="Logo">
-                        <img src="NotepadTransparent.jpg" alt="Logo" id="LogoImage" />
-                        <p id="LoggedIn">Logged in as [placeholder]</p>
-                        <h1 id="LogoText">Schedules</h1>
-                    </div>
-                    <div id="Menu">
-                        <div className="MenuItem" id="Home" onClick={() => sendToDifferentPage('/')}>
-                            <h2 className="MenuText">Home</h2>
-                        </div>
-                        <div className="MenuItem" id="SchedulesList" onClick={() => sendToDifferentPage('/schedules')}>
-                            <h2 className="MenuText">Schedules</h2>
-                        </div>
-                        <div className="MenuItem" id="Settings">
-                            <h2 className="MenuText">Settings</h2>
-                        </div>
-                        <div className="MenuItem" id="LogOut" onClick={() => sendToDifferentPage('/login')}>
-                            <h2 className="MenuText">Log Out</h2>
-                        </div>
-                    </div>
-                </div>
+                <Sidebar />
 
                 <div id="main2">
                     <h1 id="home">Home</h1>
                     <hr id="line" />
                     <span id="homepage-content">
                         <div id="YourPeriods">
-                            <h1 id="PeriodsLabelMain">Your Periods</h1>
+                            <div id="P">
+                                <h1 id="PeriodsLabelMain">Your Periods</h1>
+                                <select id="Grades" title='Select Grade' className="PeriodInput" onChange={(e) => setGrades(e.target.value)}>
+                                    <option value="7">7th Grade</option>
+                                    <option value="8">8th Grade</option>
+                                    <option value="9">9th Grade</option>
+                                    <option value="10">10th Grade</option>
+                                    <option value="11">11th Grade</option>
+                                    <option value="12">12th Grade</option>
+                                </select>
+                            </div>
                             <span className="PersonalPeriodSelection">
                                 <h1 className="PeriodNum">P1</h1>
-                                <input type="text" id="Period1" className="PeriodInput" placeholder=" Period 1" />
+                                <select id="Period1" className="PeriodInput" title='Select Teacher'>
+                                    {
+                                    Object.keys(grades).map((grade: any) => {
+                                        console.log(periods[0])
+                                    return (
+                                        <option value={grade}>{grade}</option>
+                                    )
+                                    })}
+                                </select>
                             </span>
                             <span className="PersonalPeriodSelection">
                                 <h1 className="PeriodNum">P2</h1>

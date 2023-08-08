@@ -19,6 +19,4 @@ async function logIn(): Promise<string> {
     return "";
 }
 
-export {
-    logIn
-}
+export default logIn;
