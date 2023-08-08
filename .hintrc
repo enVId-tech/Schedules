@@ -17,7 +17,8 @@
         "image-alt": "off"
       }
     ],
-    "meta-viewport": "off"
+    "meta-viewport": "off",
+    "axe/forms": "off"
   },
   "browserslist": [
     "defaults",

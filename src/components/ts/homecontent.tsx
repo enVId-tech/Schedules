@@ -2,25 +2,46 @@ import React, { useState, useEffect } from 'react';
 import '../scss/home.scss'
 import Sidebar from './sidebar.tsx';
 
+interface Teacher {
+    name: string;
+    periods: number[];
+}
+
+interface Subject {
+    subject: string;
+    teachers: Teacher[];
+}
+
 const HomeContent: React.FC = () => {
     const [periods, setPeriods] = useState([]);
     const [grades, setGrades] = useState("7");
 
+    const numberOfPeriods = 8;
+
     useEffect(() => {
         getPeriods();
-    }, []);
+    }, [grades]); // Update when the selected grade changes
+
+    const jsonData: Subject[] = periods[0] ? periods[0][Number(grades)] : [];
+
 
     const savePeriods: () => void = async () => {
         let periods = [];
 
-        periods.push((document.getElementById("Period1") as HTMLInputElement).value);
-        periods.push((document.getElementById("Period2") as HTMLInputElement).value);
-        periods.push((document.getElementById("Period3") as HTMLInputElement).value);
-        periods.push((document.getElementById("Period4") as HTMLInputElement).value);
-        periods.push((document.getElementById("Period5") as HTMLInputElement).value);
-        periods.push((document.getElementById("Period6") as HTMLInputElement).value);
-        periods.push((document.getElementById("Period7") as HTMLInputElement).value);
-        periods.push((document.getElementById("Period8") as HTMLInputElement).value);
+        for (let i = 1; i <= numberOfPeriods; i++) {
+            const period = document.getElementById(`Period${i}`) as HTMLSelectElement;
+            const teacher = period.value.split('P')[0];
+            const periodNum = period.value.split('P')[1];
+
+            if (teacher && periodNum) {
+                periods.push({
+                    teacher,
+                    period: Number(periodNum)
+                });
+            }
+        }
+
+        console.log(periods);
 
         const data = {
             method: 'POST',
@@ -51,6 +72,26 @@ const HomeContent: React.FC = () => {
         }
     }
 
+    const renderTeacherOptions = (period: number) => {
+        return (
+            jsonData.map((subject) => (
+                subject.teachers.length > 0 ? (
+                    <optgroup label={subject.subject}>
+                        {subject.teachers.map((teacher) => (
+                            teacher.periods.includes(period) ? (
+                                <option value={`${teacher.name}P${period}`}>{teacher.name}, P{period}</option>
+                            ) : (
+                                null
+                            )
+                        ))}
+                    </optgroup>
+                ) : (
+                    null
+                )
+            ))
+        );
+    };
+
     return (
         <>
             <span id="homepage">
@@ -63,55 +104,37 @@ const HomeContent: React.FC = () => {
                         <div id="YourPeriods">
                             <div id="P">
                                 <h1 id="PeriodsLabelMain">Your Periods</h1>
-                                <select id="Grades" title='Select Grade' className="PeriodInput" onChange={(e) => setGrades(e.target.value)}>
-                                    <option value="7">7th Grade</option>
-                                    <option value="8">8th Grade</option>
-                                    <option value="9">9th Grade</option>
-                                    <option value="10">10th Grade</option>
-                                    <option value="11">11th Grade</option>
-                                    <option value="12">12th Grade</option>
+                                <select
+                                    id="Grades"
+                                    title='Select Grade'
+                                    className="PeriodInput"
+                                    value={grades}
+                                    onChange={(e) => setGrades(e.target.value)}
+                                >
+                                    {
+                                        Array.from({ length: 6 }, (_, i) => i + 7).map((grade) => (
+                                            <option value={grade}>{grade}th Grade</option>
+                                        ))
+                                    }
                                 </select>
                             </div>
-                            <span className="PersonalPeriodSelection">
-                                <h1 className="PeriodNum">P1</h1>
-                                <select id="Period1" className="PeriodInput" title='Select Teacher'>
-                                    {
-                                    Object.keys(grades).map((grade: any) => {
-                                        console.log(periods[0])
-                                    return (
-                                        <option value={grade}>{grade}</option>
-                                    )
-                                    })}
-                                </select>
-                            </span>
-                            <span className="PersonalPeriodSelection">
-                                <h1 className="PeriodNum">P2</h1>
-                                <input type="text" id="Period2" className="PeriodInput" placeholder=" Period 2" />
-                            </span>
-                            <span className="PersonalPeriodSelection">
-                                <h1 className="PeriodNum">P3</h1>
-                                <input type="text" id="Period3" className="PeriodInput" placeholder=" Period 3" />
-                            </span>
-                            <span className="PersonalPeriodSelection">
-                                <h1 className="PeriodNum">P4</h1>
-                                <input type="text" id="Period4" className="PeriodInput" placeholder=" Period 4" />
-                            </span>
-                            <span className="PersonalPeriodSelection">
-                                <h1 className="PeriodNum">P5</h1>
-                                <input type="text" id="Period5" className="PeriodInput" placeholder=" Period 5" />
-                            </span>
-                            <span className="PersonalPeriodSelection">
-                                <h1 className="PeriodNum">P6</h1>
-                                <input type="text" id="Period6" className="PeriodInput" placeholder=" Period 6" />
-                            </span>
-                            <span className="PersonalPeriodSelection">
-                                <h1 className="PeriodNum">P7</h1>
-                                <input type="text" id="Period7" className="PeriodInput" placeholder=" Period 7" />
-                            </span>
-                            <span className="PersonalPeriodSelection">
-                                <h1 className="PeriodNum">P8</h1>
-                                <input type="text" id="Period8" className="PeriodInput" placeholder=" Period 8" />
-                            </span>
+                            {
+                                Array.from({ length: numberOfPeriods }, (_, i) => i + 1).map((period) => (
+                                    <span className="PersonalPeriodSelection">
+                                        <h1 className="PeriodNum">P{period}</h1>
+                                        <select
+                                            id={`Period${period}`}
+                                            className="PeriodInput"
+                                            title='Select Teacher'
+                                        >
+                                            <option value="">Select a subject</option>
+                                            {
+                                                renderTeacherOptions(period)
+                                            }
+                                        </select>
+                                    </span>
+                                ))
+                            }
                             <span className="PersonalPeriodSelection">
                                 <h1 className="PeriodNum">00 </h1>
                                 <input type="submit" id="Save" className="PeriodInput" value="Press to Save" onClick={() => savePeriods()} />

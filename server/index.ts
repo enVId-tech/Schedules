@@ -63,7 +63,7 @@ passport.use(
     )
 );
 
-mongoFuncs.deleteFromDatabase({}, "ScheduleSessions", "many", true)
+mongoFuncs.deleteFromDatabase({}, "SchedulesSessions", "many", true)
 
 // Google OAuth2 Credentials
 passport.serializeUser((user: any, done: any) => {
