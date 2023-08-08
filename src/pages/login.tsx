@@ -3,7 +3,7 @@ import React from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import ClassHelmet from '../components/ts/pagehead.tsx';
 import '../components/scss/home.scss';
-import logIn from '../components/ts/login.ts';
+import LoginForm from '../components/ts/loginform.tsx';
 
 const LoginPage: React.FC = () => {
     return (
@@ -17,25 +17,10 @@ const LoginPage: React.FC = () => {
                     </span>
                     <p id="LoginLabel">Login</p>
                     <br /><br />
-                    <form id="MainLogin">
-                        <input type="text" autoComplete="username" placeholder="Username" id="username" spellCheck="false" />
-                        <br /><br />
-                        <input type="password" autoComplete="current-password" placeholder="Password" id="password"
-                            spellCheck="false" />
-                        <br /><br />
-                        <h1 id="Error"></h1>
-                        <button type="submit" id="LoginButton" onClick={() => logIn()}>Login</button>
-
-                        <br /><br /><br />
-
-                        <a href="http://localhost:3001/auth/google" className="googlesignin">
-                            <span className="fa fa-google"></span>Register/Sign In with Google
-                        </a>
-                    </form>
+                    <LoginForm />
                     <br /><br />
                 </div>
             </div>
-
         </HelmetProvider>
     );
 };

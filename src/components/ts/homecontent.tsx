@@ -27,37 +27,40 @@ const HomeContent: React.FC = () => {
 
     const savePeriods: () => void = async () => {
         let periods = [];
+        const currentGrade: number = Number(grades);
 
         for (let i = 1; i <= numberOfPeriods; i++) {
-            const period = document.getElementById(`Period${i}`) as HTMLSelectElement;
-            const teacher = period.value.split('P')[0];
-            const periodNum = period.value.split('P')[1];
+            try {
+                const period = document.getElementById(`Period${i}`) as HTMLSelectElement;
+                const teacher = period.value.split('%')[0];
+                const periodNum = period.value.split('&')[1];
+                const classNum = period.value.split('%')[1].split('&')[0];
 
-            if (teacher && periodNum) {
-                periods.push({
-                    teacher,
-                    period: Number(periodNum)
-                });
+                if (teacher && periodNum) {
+                    periods.push({
+                        teacher,
+                        period: Number(periodNum),
+                        class: classNum
+                    });
+                }
+            } catch (error) {
+                continue;
             }
         }
-
-        console.log(periods);
 
         const data = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(periods)
+            body: JSON.stringify({ currentGrade, periods }) as unknown as BodyInit
+
         }
 
         const fetchData = await fetch('/api/saveperiods', data);
-        const response = await fetchData.json();
 
-        if (response.status === 'success') {
-            alert('Successfully saved periods!');
-        } else {
-            alert('Failed to save periods!');
+        if (fetchData.status !== 200) {
+            alert('There was an error saving your periods. Please try again later.');
         }
     }
 
@@ -79,7 +82,7 @@ const HomeContent: React.FC = () => {
                     <optgroup label={subject.subject}>
                         {subject.teachers.map((teacher) => (
                             teacher.periods.includes(period) ? (
-                                <option value={`${teacher.name}P${period}`}>{teacher.name}, P{period}</option>
+                                <option value={`${teacher.name}%${subject.subject}&${period}`}>{teacher.name}, P{period}</option>
                             ) : (
                                 null
                             )
@@ -121,13 +124,13 @@ const HomeContent: React.FC = () => {
                             {
                                 Array.from({ length: numberOfPeriods }, (_, i) => i + 1).map((period) => (
                                     <span className="PersonalPeriodSelection">
-                                        <h1 className="PeriodNum">P{period}</h1>
+                                        <h1 className="PeriodNum">{period}</h1>
                                         <select
                                             id={`Period${period}`}
                                             className="PeriodInput"
                                             title='Select Teacher'
                                         >
-                                            <option value="">Select a subject</option>
+                                            <option value="NoneSelected">Select a subject</option>
                                             {
                                                 renderTeacherOptions(period)
                                             }

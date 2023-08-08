@@ -1,10 +1,63 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import '../components/scss/home.scss';
 import ClassHelmet from "../components/ts/pagehead.tsx";
 import Sidebar from "../components/ts/sidebar.tsx";
 
+interface Student {
+    displayName: string;
+    grade: number;
+    profilePicture: string;
+    schedule: object[];
+    studentID: string;
+}
+
 const SchedulesPage: React.FC = () => {
+const [students, setStudents] = useState<Student[]>([]);
+
+    useEffect(() => {
+        getStudents();
+    }, []);
+
+    const getStudents: () => void = async () => {
+        const data = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        const fetchData = await fetch('/api/getstudentschedules', data);
+        const response = await fetchData.json();
+
+        if (response.error) {
+            console.error(response.error);
+            throw new Error(response.error);
+        }
+
+        console.log(response);
+
+        setStudents(response);
+    }
+
+    const createPeriods = () => {
+        for (let i = 0; i < students.length; i++) {
+            return (
+                <div className="Student">
+                    <h1 className="Name">{students[i].displayName}</h1>
+                    <h2 className="StudentInfo">{students[i].studentID} - {students[i].grade}th grade</h2>
+                    <div className="Periods">
+                        {students[i].schedule.map((period: any) => {
+                            return (
+                                <p className="Period">P{period.period} - {period.class}</p>
+                            )
+                        })}
+                    </div>
+                </div>
+            )
+        }
+    }
+
     return (
         <HelmetProvider>
             <ClassHelmet page="Schedules" />
@@ -14,34 +67,7 @@ const SchedulesPage: React.FC = () => {
                     <h1 id="SchedulesLabel">Schedules</h1>
                     <hr id="line" />
                     <div id="Students">
-                        <div className="Student">
-                            <h1 className="Name">Erick Tran</h1>
-                            <h2 className="StudentInfo">1071039 - 9th grade</h2>
-                            <div className="Periods">
-                                <p className="Period">P1 - English 1 H</p>
-                                <p className="Period">P2 - Career/Fin/Tech</p>
-                                <p className="Period">P3 - Living Earth H</p>
-                                <p className="Period">P4 - AP Comp. Sci. Principles</p>
-                                <p className="Period">P5 - Adv. String Ensemble</p>
-                                <p className="Period">P6 - Spanish 2</p>
-                                <p className="Period">P7 - PE 1 - Athletes</p>
-                                <p className="Period">P8 - Integrated Math 2-3 H</p>
-                            </div>
-                        </div>
-                        <div className="Student">
-                            <h1 className="Name">Nick Nguyen</h1>
-                            <h2 className="StudentInfo">1069869 - 9th grade</h2>
-                            <div className="Periods">
-                                <p className="Period">P1 - Living Earth H</p>
-                                <p className="Period">P2 - AP Comp. Sci. Principles</p>
-                                <p className="Period">P3 - Integrated Math 2-3 H</p>
-                                <p className="Period">P4 - DE-CHIN 101 C</p>
-                                <p className="Period">P5 - Adv. String Ensemble</p>
-                                <p className="Period">P6 - PE 1 - Athletes</p>
-                                <p className="Period">P7 - Health Sci 1</p>
-                                <p className="Period">P8 - English 1 H</p>
-                            </div>
-                        </div>
+                        {createPeriods()}
                     </div>
                 </span>
             </span>

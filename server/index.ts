@@ -108,11 +108,12 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
                 siteUsername: "",
                 sitePassword: "",
                 settings: {
+                    grade: "",
                     theme: "dark",
                     visible: "public", // public, private, friends, unlisted
                     friends: [],
                     blocked: [],
-                    canLogInMultiple: false,
+                    canLogInMultipleDevices: true,
                 },
                 unlistedSettings: {
                     isTerminated: false,
@@ -152,14 +153,15 @@ app.post('/api/saveperiods', async (req: Request, res: Response) => {
 
     const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true, { dataIDNumber: userDataID }));
 
-    findExistingData.schedule = data;
+    findExistingData.schedule = data.periods;
+    findExistingData.settings.grade = data.currentGrade;
 
     const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ dataIDNumber: userDataID }, findExistingData, "SchedulesUsers", true);
 
     if (updateExistingData) {
-        res.send({ success: "Success updating data" });
+        res.sendStatus(200);
     } else {
-        res.send({ error: "Error updating data" });
+        res.sendStatus(500);
     }
 });
 
@@ -176,6 +178,34 @@ app.get("/api/getteachers", async (req: Request, res: Response) => {
     const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("TeachersAvailable", true));
 
     res.send(data);
+});
+
+app.get("/api/getstudentschedules", async (req: Request, res: Response) => {
+    const data: any[] = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true));
+
+    let newData: any[] = [];
+
+    console.log(data);
+
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].settings.visible === "public") {
+            if (data[i].schedule.length > 0) {
+                let newDataItem: any = {};
+
+                newDataItem.displayName = data[i].displayName;
+                newDataItem.studentID = data[i].email.split("@")[0];
+                newDataItem.schedule = data[i].schedule;
+                newDataItem.grade = data[i].settings.grade;
+                newDataItem.profilePicture = data[i].profilePicture;
+
+                newData.push(newDataItem);
+            }
+        }
+    }
+
+    console.log(newData);
+
+    res.send(newData);
 });
 
 process.on("SIGINT", async () => {

@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import '../scss/sidebar.module.scss';
 import LoadInStudentData from './getstudentdata.ts';
 
 const Sidebar: React.FC = () => {
     const [firstName, setFirstName] = useState<string>("")
-    const [displayName, setDisplayName] = useState<string>("")
     const [userImg, setUserImg] = useState<string>("")
 
     useEffect(() => {
         const loadInData = async () => {
             const data = await LoadInStudentData();
             setFirstName(data.firstName);
-            setDisplayName(data.displayName);
             setUserImg(data.profilePicture);
         }
         loadInData();

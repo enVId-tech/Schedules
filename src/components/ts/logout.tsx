@@ -73,22 +73,10 @@ function LoggedOut(): JSX.Element {
     );
 }
 
-async function refreshSessionCookie(): Promise<void> {
-    const data: Response = await fetch('/student/data/refresh');
-
-    if (data.status !== 200) {
-        //window.location.href = '/login';
-        //console.error('Error refreshing session cookie.');
-    } else {
-        //console.log('Session cookie refreshed.');
-    }
-}
-
 const logout = {
     logOut,
     checkLogin,
-    LoggedOut,
-    refreshSessionCookie
+    LoggedOut
 }
 
 export default logout;
