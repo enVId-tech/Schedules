@@ -32,7 +32,7 @@ const Sidebar: React.FC = () => {
                 <div className="MenuItem" id="SchedulesList" onClick={() => moveToDifferentFile('/schedules')}>
                     <h2 className="MenuText">Schedules</h2>
                 </div>
-                <div className="MenuItem" id="Settings">
+                <div className="MenuItem" id="Settings" onClick={() => moveToDifferentFile('/settings')}>
                     <h2 className="MenuText">Settings</h2>
                 </div>
                 <div className="MenuItem" id="LogOut">

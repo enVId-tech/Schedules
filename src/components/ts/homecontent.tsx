@@ -12,18 +12,48 @@ interface Subject {
     teachers: Teacher[];
 }
 
+interface Student {
+    displayName: string;
+    grade: number;
+    profilePicture: string;
+    schedule: object[];
+    studentID: string;
+}
+
 const HomeContent: React.FC = () => {
     const [periods, setPeriods] = useState([]);
     const [grades, setGrades] = useState("7");
+    const [students, setStudents] = useState<Student[]>([]);
 
     const numberOfPeriods = 8;
 
     useEffect(() => {
         getPeriods();
+        getStudents();
     }, [grades]); // Update when the selected grade changes
 
     const jsonData: Subject[] = periods[0] ? periods[0][Number(grades)] : [];
 
+    const getStudents: () => void = async () => {
+        const data = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        const fetchData = await fetch('/api/getstudentschedules', data);
+        const response = await fetchData.json();
+
+        if (response.error) {
+            console.error(response.error);
+            throw new Error(response.error);
+        }
+
+        console.log(response);
+
+        setStudents(response);
+    }
 
     const savePeriods: () => void = async () => {
         let periods = [];

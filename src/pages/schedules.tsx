@@ -13,7 +13,7 @@ interface Student {
 }
 
 const SchedulesPage: React.FC = () => {
-const [students, setStudents] = useState<Student[]>([]);
+    const [students, setStudents] = useState<Student[]>([]);
 
     useEffect(() => {
         getStudents();
