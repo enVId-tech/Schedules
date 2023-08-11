@@ -304,6 +304,102 @@
     margin-bottom: 5px;
 }
 
+#FullSchedules {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(31, 31, 31, 0.8);
+    align-items: center;
+    justify-content: center;
+    font-family: 'Work Sans', san-serif;
+    z-index: 10000;
+
+    & #fullpageschedule {
+        width: 80vw;
+        height: 75vh;
+        border-radius: 30px;
+        background-color: rgb(15, 15, 15);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        & .StudentFull {
+            width: 76vw;
+            height: 65vh;
+            border-radius: 25px;
+            background-color: rgb(39, 39, 39);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            & #NameFull {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                width: 72vw;
+                justify-content: space-between;
+
+                & .Name {
+                    font-size: 50px;
+                    font-weight: 100;
+                    font-family: 'Work Sans', sans-serif;
+                }
+
+                & .StudentInfo {
+                    font-size: 50px;
+                    font-weight: 100;
+                    font-family: 'Work Sans', sans-serif;
+                }
+            }
+
+            & .PeriodsFull {
+                width: 74vw;
+                height: 50vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: rgb(48, 48, 48);
+                border-radius: 20px;
+                justify-content: space-around;
+
+                & #PeriodFull {
+                    width: 7.33vw;
+                    height: 45vh;
+                    background-color: rgb(39, 39, 39);
+                    border-radius: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    border: 2px solid rgb(0, 0, 0);
+
+                    & .PeriodFullName {
+                        font-size: 50px;
+                        font-weight: 100;
+                        font-family: 'Work Sans', sans-serif;
+                    }
+
+                    & .ClassName {
+                        font-size: 30px;
+                        font-weight: 100;
+                        font-family: 'Work Sans', sans-serif;
+                    }
+
+                    & .TeacherFullName {
+                        font-size: 20px;
+                        font-weight: 100;
+                        font-family: 'Work Sans', sans-serif;
+                    }
+                }
+            }
+        }
+    }
+}
+
 /* Home Page */
 
 #homepage {

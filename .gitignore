@@ -143,3 +143,4 @@ dist
 
 # local env files
 .env.local
+server/configs/credentials.env.local
