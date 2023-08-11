@@ -308,7 +308,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    display: flex;
+    display: none;
     width: 100vw;
     height: 100vh;
     background-color: rgba(31, 31, 31, 0.8);
@@ -355,6 +355,13 @@
                     font-weight: 100;
                     font-family: 'Work Sans', sans-serif;
                 }
+
+                & #CloseWindow {
+                    font-size: 50px;
+                    font-weight: 100;
+                    font-family: 'Work Sans', sans-serif;
+                    cursor: pointer;
+                }
             }
 
             & .PeriodsFull {
@@ -367,7 +374,7 @@
                 border-radius: 20px;
                 justify-content: space-around;
 
-                & #PeriodFull {
+                & .PeriodFullTeachers {
                     width: 7.33vw;
                     height: 45vh;
                     background-color: rgb(39, 39, 39);

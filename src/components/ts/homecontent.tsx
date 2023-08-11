@@ -154,7 +154,7 @@ const HomeContent: React.FC = () => {
                             {
                                 Array.from({ length: numberOfPeriods }, (_, i) => i + 1).map((period) => (
                                     <span className="PersonalPeriodSelection">
-                                        <h1 className="PeriodNum">{period}</h1>
+                                        <h1 className="PeriodNum">P{period}</h1>
                                         <select
                                             id={`Period${period}`}
                                             className="PeriodInput"
@@ -169,7 +169,7 @@ const HomeContent: React.FC = () => {
                                 ))
                             }
                             <span className="PersonalPeriodSelection">
-                                <h1 className="PeriodNum">00 </h1>
+                                <h1 className="PeriodNum">P </h1>
                                 <input type="submit" id="Save" className="PeriodInput" value="Press to Save" onClick={() => savePeriods()} />
                             </span>
                         </div>

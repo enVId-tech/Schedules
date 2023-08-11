@@ -78,6 +78,8 @@ app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "em
 app.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/login" }), async (req: Request, res: Response) => {
     const user = req.user as any;
 
+    console.log(user);
+
     const validEmailDomains = ["student.auhsd.us"];
 
     if (validEmailDomains.includes(user._json.hd)) {
@@ -188,18 +190,24 @@ app.get("/api/getstudentschedules", async (req: Request, res: Response) => {
     console.log(data);
 
     for (let i = 0; i < data.length; i++) {
-        if (data[i].settings.visible === "public") {
-            if (data[i].schedule.length > 0) {
-                let newDataItem: any = {};
+        try {
+            if (data[i].settings.visible === "public") {
+                if (data[i].schedule.length > 0) {
+                    let newDataItem: any = {};
 
-                newDataItem.displayName = data[i].displayName;
-                newDataItem.studentID = data[i].email.split("@")[0];
-                newDataItem.schedule = data[i].schedule;
-                newDataItem.grade = data[i].settings.grade;
-                newDataItem.profilePicture = data[i].profilePicture;
+                    newDataItem.displayName = data[i].displayName;
+                    newDataItem.studentID = data[i].email.split("@")[0];
+                    newDataItem.schedule = data[i].schedule;
+                    newDataItem.grade = data[i].settings.grade;
+                    newDataItem.profilePicture = data[i].profilePicture;
 
-                newData.push(newDataItem);
+                    newData.push(newDataItem);
+                }
             }
+        } catch (err) {
+            console.log(err);
+            console.log("Error with user: " + data[i].displayName);
+            console.log("Data:" + JSON.stringify(data[i]));
         }
     }
 

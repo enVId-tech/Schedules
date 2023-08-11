@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 async function logOut(): Promise<void> {
     try {
@@ -50,27 +50,17 @@ async function checkLogin(): Promise<void> {
     }
 }
 
-function LoggedOut(): JSX.Element {
+function LoggedOut(): void {
     useEffect(() => {
         (async () => {
-            await logOut();
+            try {
+                await logOut();
+            } catch (error: any) {
+                console.error(error);
+                throw new Error(error);
+            }
         })();
     }, []);
-
-    const handleLogout = async (): Promise<void> => {
-        try {
-            await logOut();
-        } catch (error: any) {
-            console.error(error);
-            throw new Error(error);
-        }
-    }
-
-    return (
-        <div>
-            <button onClick={handleLogout}>Log Out</button>
-        </div>
-    );
 }
 
 const logout = {
