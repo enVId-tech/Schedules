@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/heading-has-content */
 import React from 'react';
-import logIn from '../ts/login.ts';
+import logIn from './login.ts';
 
 const LoginForm: React.FC = () => {
     return (

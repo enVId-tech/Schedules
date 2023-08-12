@@ -1,9 +1,8 @@
 /* eslint-disable jsx-a11y/heading-has-content */
 import React from 'react';
 import { HelmetProvider } from 'react-helmet-async';
-import ClassHelmet from '../components/ts/pagehead.tsx';
-import '../components/scss/home.scss';
-import LoginForm from '../components/ts/loginform.tsx';
+import ClassHelmet from '../../components/ts/pagehead.tsx';
+import LoginForm from './loginform.tsx';
 
 const LoginPage: React.FC = () => {
     return (

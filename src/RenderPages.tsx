@@ -1,14 +1,14 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Navigate, Routes } from 'react-router-dom';
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
 // Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import './components/scss/home.scss'
 // Components
-import HomePage from './pages/home.tsx';
-import LoginPage from './pages/login.tsx';
-import SchedulesPage from './pages/schedules.tsx';
-import SettingsPage from './pages/settings.tsx';
+import HomePage from './pages/home/home.tsx';
+import LoginPage from './pages/login/login.tsx';
+import SchedulesPage from './pages/schedules/schedules.tsx';
+import SettingsPage from './pages/settings/settings.tsx';
 
 // Render
 const RenderPages: React.FC = () => {

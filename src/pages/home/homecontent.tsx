@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import '../scss/home.scss'
-import Sidebar from './sidebar.tsx';
+import React, { useEffect, useState } from 'react';
+import Sidebar from '../../components/ts/sidebar.tsx';
 
 interface Teacher {
     name: string;

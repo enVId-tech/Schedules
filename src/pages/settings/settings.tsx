@@ -1,8 +1,7 @@
 import React from 'react';
 import { HelmetProvider } from 'react-helmet-async';
-import Sidebar from '../components/ts/sidebar.tsx';
-import ClassHelmet from '../components/ts/pagehead.tsx';
-import '../components/scss/home.scss';
+import ClassHelmet from '../../components/ts/pagehead.tsx';
+import Sidebar from '../../components/ts/sidebar.tsx';
 
 const SettingsPage: React.FC = () => {
     return (
