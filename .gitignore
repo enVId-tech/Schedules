@@ -144,3 +144,7 @@ dist
 # local env files
 .env.local
 server/configs/credentials.env.local
+
+build
+noderun.bat
+reactrun.bat

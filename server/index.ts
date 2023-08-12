@@ -6,15 +6,20 @@ import express, { Express, Request, Response } from "express";
 import session from "express-session";
 import mongoose from "mongoose";
 import passport from "passport";
+import { fileURLToPath } from 'url';
+import path from 'path';
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import "./configs/db.ts";
 import { CLIENT_DB, CLIENT_ID, CLIENT_SECRET, SERVER_PORT } from "./configs/env.ts";
 import encrypts from "./modules/encryption.ts";
 import mongoFuncs from "./modules/mongoDB.ts";
 
+// File Path Initialization
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // Express Initialization
 const app: Express = express();
-//app.use(express.static("public"));
 
 //Library Initialization
 app.use(express.json());
@@ -55,7 +60,7 @@ passport.use(
         {
             clientID: CLIENT_ID,
             clientSecret: CLIENT_SECRET,
-            callbackURL: "/auth/google/callback"
+            callbackURL: "http://127.0.0.1:3001/auth/google/callback"
         },
         (accessToken, refreshToken, profile, done) => {
             return done(null, profile);
@@ -128,9 +133,9 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
             const write = await mongoFuncs.writeToDatabase(newUser, "SchedulesUsers", true) || false;
 
             if (write) {
-                res.redirect("http://localhost:3000/home");
+                res.redirect("http://localhost:3001/home");
             } else {
-                res.redirect("http://localhost:3000/login");
+                res.redirect("http://localhost:3001/login");
             }
         } else {
             const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true, { email: user._json.email }));
@@ -140,13 +145,13 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
             const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ email: user._json.email }, findExistingData, "SchedulesUsers", true);
 
             if (updateExistingData) {
-                res.redirect("http://localhost:3000/home");
+                res.redirect("http://localhost:3001/home");
             } else {
-                res.redirect("http://localhost:3000/login");
+                res.redirect("http://localhost:3001/login");
             }
         }
     } else {
-        res.redirect("http://localhost:3000/login");
+        res.redirect("http://localhost:3001/login");
     }
 });
 
@@ -170,10 +175,6 @@ app.post('/api/saveperiods', async (req: Request, res: Response) => {
 app.get("/api/getstudentdata", async (req: Request, res: Response) => {
     const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true, { dataIDNumber: userDataID }));
     res.send(data);
-});
-
-app.listen(SERVER_PORT, () => {
-    console.log(`Server is running on port ${SERVER_PORT}`);
 });
 
 app.get("/api/getteachers", async (req: Request, res: Response) => {
@@ -214,6 +215,21 @@ app.get("/api/getstudentschedules", async (req: Request, res: Response) => {
     console.log(newData);
 
     res.send(newData);
+});
+
+// GOOGLE OAUTH FIX DOCUMENTATION
+// Use the code below for your build.
+// IMPORTANT: Make sure that this code is placed AFTER the /google/auth (or equivalent) and /google/auth/callback (or equivalent) route.
+
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
+// Handle all other routes by serving the 'index.html' file
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+});
+
+app.listen(SERVER_PORT, () => {
+    console.log(`Server is running on port ${SERVER_PORT}`);
 });
 
 process.on("SIGINT", async () => {
