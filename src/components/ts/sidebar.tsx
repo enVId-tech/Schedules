@@ -23,19 +23,19 @@ const Sidebar: React.FC = () => {
             <div id="Logo">
                 <img src={userImg} alt="Logo" id="LogoImage" />
                 <p id="LoggedIn">Logged in as {firstName}</p>
-                <h1 id="LogoText">Schedules</h1>
             </div>
+            <hr />
             <div id="Menu">
-                <div className="MenuItem" id="Home" onClick={() => moveToDifferentFile('/')}>
+                <div className="MenuItem" id="HomeSidebar" onClick={() => moveToDifferentFile('/')}>
                     <h2 className="MenuText">Home</h2>
                 </div>
-                <div className="MenuItem" id="SchedulesList" onClick={() => moveToDifferentFile('/schedules')}>
+                <div className="MenuItem" id="SchedulesListSidebar" onClick={() => moveToDifferentFile('/schedules')}>
                     <h2 className="MenuText">Schedules</h2>
                 </div>
-                <div className="MenuItem" id="Settings" onClick={() => moveToDifferentFile('/settings')}>
+                <div className="MenuItem" id="SettingsSidebar" onClick={() => moveToDifferentFile('/settings')}>
                     <h2 className="MenuText">Settings</h2>
                 </div>
-                <div className="MenuItem" id="LogOut">
+                <div className="MenuItem" id="LogOutSidebar">
                     <h2 className="MenuText" onClick={() => moveToDifferentFile('/login')}>Log Out</h2>
                 </div>
             </div>

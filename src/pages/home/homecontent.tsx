@@ -171,6 +171,7 @@ const HomeContent: React.FC = () => {
                                 <h1 className="PeriodNum">P </h1>
                                 <input type="submit" id="Save" className="PeriodInput" value="Press to Save" onClick={() => savePeriods()} />
                             </span>
+                            
                         </div>
                         <div id="PeriodsRecent">
                             <span id="Visited">
@@ -184,6 +185,7 @@ const HomeContent: React.FC = () => {
                                 </h1>
                             </span>
                         </div>
+                        <h1 id="Disclaimer">Missing any periods? Send me a message at 'envid_' on discord!</h1>
                     </span>
                 </div>
             </span>

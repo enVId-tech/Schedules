@@ -6,9 +6,9 @@ import express, { Express, Request, Response } from "express";
 import session from "express-session";
 import mongoose from "mongoose";
 import passport from "passport";
-import { fileURLToPath } from 'url';
-import path from 'path';
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import path from 'path';
+import { fileURLToPath } from 'url';
 import "./configs/db.ts";
 import { CLIENT_DB, CLIENT_ID, CLIENT_SECRET, SERVER_PORT } from "./configs/env.ts";
 import encrypts from "./modules/encryption.ts";
@@ -133,9 +133,9 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
             const write = await mongoFuncs.writeToDatabase(newUser, "SchedulesUsers", true) || false;
 
             if (write) {
-                res.redirect("http://localhost:3001/home");
+                res.redirect("http://localhost:3000/home");
             } else {
-                res.redirect("http://localhost:3001/login");
+                res.redirect("http://localhost:3000/login");
             }
         } else {
             const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true, { email: user._json.email }));
@@ -145,13 +145,13 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
             const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ email: user._json.email }, findExistingData, "SchedulesUsers", true);
 
             if (updateExistingData) {
-                res.redirect("http://localhost:3001/home");
+                res.redirect("http://localhost:3000/home");
             } else {
-                res.redirect("http://localhost:3001/login");
+                res.redirect("http://localhost:3000/login");
             }
         }
     } else {
-        res.redirect("http://localhost:3001/login");
+        res.redirect("http://localhost:3000/login");
     }
 });
 
@@ -188,8 +188,6 @@ app.get("/api/getstudentschedules", async (req: Request, res: Response) => {
 
     let newData: any[] = [];
 
-    console.log(data);
-
     for (let i = 0; i < data.length; i++) {
         try {
             if (data[i].settings.visible === "public") {
@@ -215,6 +213,63 @@ app.get("/api/getstudentschedules", async (req: Request, res: Response) => {
     console.log(newData);
 
     res.send(newData);
+});
+
+app.get('/api/getallusersettings', async (req: Request, res: Response) => {
+    const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true, { dataIDNumber: userDataID }));
+
+    let newData: any[] = [];
+
+    try {
+        let newDataItem: any = {};
+
+        newDataItem.displayName = data.displayName;
+        newDataItem.studentID = data.email.split("@")[0];
+        newDataItem.grade = data.settings.grade;
+        newDataItem.settings = data.settings;
+
+        newData.push(newDataItem);
+    } catch (err) {
+        console.log(err);
+        console.log("Error with user: " + data.displayName);
+        console.log("Data:" + JSON.stringify(data));
+    }
+
+    res.send(newData);
+});
+
+app.post('/api/savesettings', async (req: Request, res: Response) => {
+    const data: any = req.body;
+
+    const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true, { dataIDNumber: userDataID }));
+
+    findExistingData.firstName = data.firstName;
+    findExistingData.lastName = data.lastName;
+    findExistingData.displayName = data.firstName + " " + data.lastName;
+    findExistingData.siteUsername = data.username;
+    findExistingData.sitePassword = encrypts.permanentEncryptPassword(data.password);
+    findExistingData.settings.visible = data.visible;
+    findExistingData.settings.grade = data.grade;
+
+    const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ dataIDNumber: userDataID }, findExistingData, "SchedulesUsers", true);
+
+    if (updateExistingData) {
+        res.sendStatus(200);
+    } else {
+        res.sendStatus(500);
+    }
+});
+
+app.post('/user/login', async (req: Request, res: Response) => {
+    const data: any = req.body;
+
+    const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true, { siteUsername: data.username }));
+
+    if (await encrypts.comparePassword(data.password, findExistingData.sitePassword)) {
+        res.sendStatus(200);
+    } else {
+        res.sendStatus(500);
+    }
 });
 
 // GOOGLE OAUTH FIX DOCUMENTATION
