@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // Libraries
+import bodyParser from "body-parser";
 import connectMongoDBSession from "connect-mongodb-session";
 import cors from "cors";
 import express, { Express, Request, Response } from "express";
@@ -34,6 +35,7 @@ var userDataID: string = "";
 // MongoDB Credentials
 const MongoDBStore = connectMongoDBSession(session);
 
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
     secret: SECRET,
     resave: false,
@@ -83,8 +85,6 @@ app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "em
 app.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/login" }), async (req: Request, res: Response) => {
     const user = req.user as any;
 
-    console.log(user);
-
     const validEmailDomains = ["student.auhsd.us"];
 
     if (validEmailDomains.includes(user._json.hd)) {
@@ -130,61 +130,65 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
                 dataIDNumber: dataIDRandom,
             }
 
-            const write = await mongoFuncs.writeToDatabase(newUser, "SchedulesUsers", true) || false;
+            const write = await mongoFuncs.writeToDatabase(newUser, "SchedulesUsers", false) || false;
 
             if (write) {
-                res.redirect("http://localhost:3000/home");
+                res.redirect("/home");
             } else {
-                res.redirect("http://localhost:3000/login");
+                res.redirect("/login");
             }
         } else {
-            const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true, { email: user._json.email }));
+            const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { email: user._json.email }));
 
             findExistingData.dataIDNumber = dataIDRandom;
 
-            const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ email: user._json.email }, findExistingData, "SchedulesUsers", true);
+            const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ email: user._json.email }, findExistingData, "SchedulesUsers", false);
 
             if (updateExistingData) {
-                res.redirect("http://localhost:3000/home");
+                res.redirect("/home");
             } else {
-                res.redirect("http://localhost:3000/login");
+                res.redirect("/login");
             }
         }
     } else {
-        res.redirect("http://localhost:3000/login");
+        res.redirect("/login");
     }
 });
 
 app.post('/api/saveperiods', async (req: Request, res: Response) => {
-    const data: any = req.body;
+    try {
+        const data: any = req.body;
 
-    const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true, { dataIDNumber: userDataID }));
+        const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: userDataID }));
 
-    findExistingData.schedule = data.periods;
-    findExistingData.settings.grade = data.currentGrade;
+        findExistingData.schedule = data.periods;
+        findExistingData.settings.grade = data.currentGrade;
 
-    const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ dataIDNumber: userDataID }, findExistingData, "SchedulesUsers", true);
+        const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ dataIDNumber: userDataID }, findExistingData, "SchedulesUsers", false);
 
-    if (updateExistingData) {
-        res.sendStatus(200);
-    } else {
+        if (updateExistingData) {
+            res.sendStatus(200);
+        } else {
+            res.sendStatus(500);
+        }
+    } catch (err) {
         res.sendStatus(500);
     }
 });
 
 app.get("/api/getstudentdata", async (req: Request, res: Response) => {
-    const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true, { dataIDNumber: userDataID }));
+    const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: userDataID }));
     res.send(data);
 });
 
 app.get("/api/getteachers", async (req: Request, res: Response) => {
-    const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("TeachersAvailable", true));
+    const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("TeachersAvailable", false));
 
     res.send(data);
 });
 
 app.get("/api/getstudentschedules", async (req: Request, res: Response) => {
-    const data: any[] = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true));
+    const data: any[] = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false));
 
     let newData: any[] = [];
 
@@ -204,19 +208,17 @@ app.get("/api/getstudentschedules", async (req: Request, res: Response) => {
                 }
             }
         } catch (err) {
-            console.log(err);
-            console.log("Error with user: " + data[i].displayName);
-            console.log("Data:" + JSON.stringify(data[i]));
+            console.error("\x1b[31m", err);
+            console.error("\x1b[31m", "Error with user: " + data[i].displayName);
+            console.error("\x1b[31m", "Data:" + JSON.stringify(data[i]));
         }
     }
-
-    console.log(newData);
 
     res.send(newData);
 });
 
 app.get('/api/getallusersettings', async (req: Request, res: Response) => {
-    const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true, { dataIDNumber: userDataID }));
+    const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: userDataID }));
 
     let newData: any[] = [];
 
@@ -230,9 +232,9 @@ app.get('/api/getallusersettings', async (req: Request, res: Response) => {
 
         newData.push(newDataItem);
     } catch (err) {
-        console.log(err);
-        console.log("Error with user: " + data.displayName);
-        console.log("Data:" + JSON.stringify(data));
+        console.error("\x1b[31m", err);
+        console.error("\x1b[31m", "Error with user: " + data.displayName);
+        console.error("\x1b[31m", "Data:" + JSON.stringify(data));
     }
 
     res.send(newData);
@@ -241,17 +243,21 @@ app.get('/api/getallusersettings', async (req: Request, res: Response) => {
 app.post('/api/savesettings', async (req: Request, res: Response) => {
     const data: any = req.body;
 
-    const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true, { dataIDNumber: userDataID }));
+    const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: userDataID }));
 
     findExistingData.firstName = data.firstName;
     findExistingData.lastName = data.lastName;
     findExistingData.displayName = data.firstName + " " + data.lastName;
     findExistingData.siteUsername = data.username;
-    findExistingData.sitePassword = encrypts.permanentEncryptPassword(data.password);
     findExistingData.settings.visible = data.visible;
     findExistingData.settings.grade = data.grade;
+    if (data.password !== "") {
+        findExistingData.sitePassword = encrypts.permanentEncryptPassword(data.password);
+    } else {
+        findExistingData.sitePassword = "null";
+    }
 
-    const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ dataIDNumber: userDataID }, findExistingData, "SchedulesUsers", true);
+    const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ dataIDNumber: userDataID }, findExistingData, "SchedulesUsers", false);
 
     if (updateExistingData) {
         res.sendStatus(200);
@@ -261,14 +267,78 @@ app.post('/api/savesettings', async (req: Request, res: Response) => {
 });
 
 app.post('/user/login', async (req: Request, res: Response) => {
-    const data: any = req.body;
+    try {
+        const data: any = req.body;
 
-    const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true, { siteUsername: data.username }));
+        const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { siteUsername: data.username }));
 
-    if (await encrypts.comparePassword(data.password, findExistingData.sitePassword)) {
-        res.sendStatus(200);
-    } else {
+        if (findExistingData === null) {
+            res.sendStatus(500);
+        } else {
+            if (!findExistingData.sitePassword.includes("null")) {
+                if (await encrypts.comparePassword(data.password, findExistingData.sitePassword)) {
+                    findExistingData.dataIDNumber = encrypts.generateRandomNumber(64, "alphanumeric");
+
+                    userDataID = findExistingData.dataIDNumber;
+
+                    const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ siteUsername: data.username }, findExistingData, "SchedulesUsers", false);
+
+                    if (updateExistingData) {
+                        const sessionData = {
+                            secret: SECRET,
+                            resave: true, // Set to true to ensure session is saved on every request
+                            saveUninitialized: true, // Set to true to save uninitialized sessions
+                            cookie: {
+                                maxAge: 1000 * 60 * 60 * 24 * 7
+                            },
+                            store: new MongoDBStore({
+                                uri: process.env.MONGODB_URI!,
+                                collection: "SchedulesSessions",
+                                expires: 1000 * 60 * 60 * 24 * 7, // 1 week
+                                databaseName: CLIENT_DB,
+                                idField: "_id",
+                                expiresKey: "sessionTime",
+                                expiresAfterSeconds: 1000 * 60 * 60 * 24 * 7 // 1 week
+                            }),
+                        };
+
+                        app.use(session(sessionData));
+
+                        res.sendStatus(200);
+                    } else {
+                        res.sendStatus(500);
+                    }
+                } else {
+                    res.sendStatus(500);
+                }
+            } else {
+                res.sendStatus(500);
+            }
+        }
+    } catch (err) {
         res.sendStatus(500);
+    }
+});
+
+app.get('/student/data/logout', async (req: Request, res: Response) => {
+    await mongoFuncs.deleteFromDatabase({ _id: req.sessionID }, "SchedulesSessions", "one", false);
+
+    req.session.destroy((err: any) => {
+        if (err) {
+            res.sendStatus(500);
+        }
+    });
+
+    const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: userDataID }));
+
+    data.dataIDNumber = "";
+
+    const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ dataIDNumber: userDataID }, data, "SchedulesUsers", false);
+
+    userDataID = "";
+
+    if (updateExistingData) {
+        res.sendStatus(200);
     }
 });
 
@@ -284,11 +354,11 @@ app.get('*', (req, res) => {
 });
 
 app.listen(SERVER_PORT, () => {
-    console.log(`Server is running on port ${SERVER_PORT}`);
+    console.warn('\x1b[33m%s\x1b[0m', `Server is running on port ${SERVER_PORT}`);
 });
 
 process.on("SIGINT", async () => {
-    console.log("Shutting down server...");
+    console.warn('\x1b[33m%s\x1b[0m', "Shutting down server...");
 
     await mongoFuncs.deleteFromDatabase({}, "SchedulesUsers", "many", true)
 

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { Collection, Db, DeleteResult, Filter, MongoClient, UpdateResult } from 'mongodb';
-import { URI, CLIENT_DB } from '../configs/env.ts';
+import { CLIENT_DB, URI } from '../configs/env.ts';
 
 const client: MongoClient = new MongoClient(URI);
 
@@ -83,14 +83,14 @@ async function modifyInDatabase(
     const result: UpdateResult = await collection.updateOne(filter, updateData);
 
     if (log && result.modifiedCount > 0) {
-      console.log("Modified", result.modifiedCount, "document(s)");
+      console.log("\x1b[32m", "Modified", result.modifiedCount, "document(s)");
     } else if (log && result.modifiedCount === 0) {
-      console.log("No documents modified");
+      console.log("\x1b[32m", "No documents modified");
     }
 
     return result.modifiedCount > 0;
   } catch (error: any) {
-    console.error(`Error modifying document:, ${error}`);
+    console.error("\x1b[31m", `Error modifying document:, ${error}`);
     throw new Error(error);
   }
 }
@@ -108,7 +108,7 @@ async function deleteFromDatabase(
   collectionName: string,
   type: 1 | 2 | "one" | "many" = 1,
   log?: boolean
-): Promise<number | undefined> {
+): Promise<number> {
   try {
     await connectToDatabase(log);
 
@@ -119,9 +119,9 @@ async function deleteFromDatabase(
       const result: DeleteResult = await collection.deleteOne(filter);
 
       if (log && result.deletedCount === 0) {
-        console.log("No documents deleted");
+        console.log("\x1b[32m", "No documents deleted");
       } else if (log && result.deletedCount > 0) {
-        console.log("Deleted", result.deletedCount, "document(s)");
+        console.log("\x1b[32m", "Deleted", result.deletedCount, "document(s)");
       }
 
       return result.deletedCount;
@@ -129,18 +129,18 @@ async function deleteFromDatabase(
       const result: DeleteResult = await collection.deleteMany(filter);
 
       if (log && result.deletedCount === 0) {
-        console.log("No documents deleted");
+        console.log("\x1b[32m","No documents deleted");
       } else if (log && result.deletedCount > 0) {
-        console.log("Deleted", result.deletedCount, "document(s)");
+        console.log("\x1b[32m", "Deleted", result.deletedCount, "document(s)");
       }
 
       return result.deletedCount;
     }
 
     // Add a default return value for any other cases
-    return undefined;
+    return 0;
   } catch (error: any) {
-    console.error(`Error deleting document(s):, ${error}`);
+    console.error("\x1b[31m", `Error deleting document(s):, ${error}`);
     throw new Error(error);
   }
 }
@@ -175,7 +175,7 @@ async function getItemsFromDatabase(
 
     return JSON.stringify(items);
   } catch (error: any) {
-    console.error(`Error getting items from database:, ${error}`);
+    console.error("\x1b[31m", `Error getting items from database:, ${error}`);
     throw new Error(error);
   }
 }

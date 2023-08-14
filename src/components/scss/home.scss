@@ -221,48 +221,42 @@
     position: relative;
     z-index: 10000;
     height: 100%;
-}
 
-#username,
-#password {
-    background-color: transparent;
-    color: white;
-    border-top-width: 0;
-    border-left-width: 0;
-    border-right-width: 0;
-    border-bottom-width: 2px;
-    border-radius: 0;
-    width: 70%;
-    font-size: 15px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    font-family: 'Work Sans', sans-serif;
-    position: relative;
-}
+    & #username,
+    & #password {
+        background-color: transparent;
+        color: white;
+        border-top-width: 0;
+        border-left-width: 0;
+        border-right-width: 0;
+        border-bottom-width: 2px;
+        border-radius: 0;
+        width: 70%;
+        font-size: 15px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-family: 'Work Sans', sans-serif;
+        position: relative;
+        
+        &:focus {
+            outline: none;
+        }
 
-#username:focus,
-#password:focus {
-    outline: none;
-}
+        &::selection {
+            background-color: rgba(0, 116, 255, 0.8);
+            width: 10.4vw;
+            height: 2.77vh;
+        }
 
-#username::selection,
-#password::selection {
-    background-color: rgba(0, 116, 255, 0.8);
-    width: 10.4vw;
-    height: 2.77vh;
-}
-
-#username:-webkit-autofill,
-#username:-webkit-autofill:hover,
-#username:-webkit-autofill:focus,
-#username:-webkit-autofill:active,
-#password:-webkit-autofill,
-#password:-webkit-autofill:hover,
-#password:-webkit-autofill:focus,
-#password:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px rgb(39, 39, 39) inset !important;
-    -webkit-text-fill-color: white !important;
-    box-shadow: 0 0 0 30px rgb(39, 39, 39) inset !important;
+        &:-webkit-autofill,
+        &:-webkit-autofill:hover,
+        &:-webkit-autofill:focus,
+        &:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 30px rgb(39, 39, 39) inset !important;
+            -webkit-text-fill-color: white !important;
+            box-shadow: 0 0 0 30px rgb(39, 39, 39) inset !important;
+        }
+    }
 }
 
 .googlesignin {

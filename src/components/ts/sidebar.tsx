@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import LoadInStudentData from './getstudentdata.ts';
+import { logOut } from './logout.ts';
 
 const Sidebar: React.FC = () => {
     const [firstName, setFirstName] = useState<string>("")
@@ -36,7 +37,7 @@ const Sidebar: React.FC = () => {
                     <h2 className="MenuText">Settings</h2>
                 </div>
                 <div className="MenuItem" id="LogOutSidebar">
-                    <h2 className="MenuText" onClick={() => moveToDifferentFile('/login')}>Log Out</h2>
+                    <h2 className="MenuText" onClick={() => logOut()}>Log Out</h2>
                 </div>
             </div>
         </div>
