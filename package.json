@@ -1,6 +1,6 @@
 {
   "name": "schedules-proj",
-  "version": "0.1.00",
+  "version": "0.1.01",
   "private": true,
   "dependencies": {
     "@types/bcrypt": "^5.0.0",

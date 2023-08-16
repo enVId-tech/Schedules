@@ -133,9 +133,9 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
             const write = await mongoFuncs.writeToDatabase(newUser, "SchedulesUsers", false) || false;
 
             if (write) {
-                res.redirect("/home");
+                res.redirect("localhost:3000/home");
             } else {
-                res.redirect("/login");
+                res.redirect("localhost:3000/login");
             }
         } else {
             const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { email: user._json.email }));
@@ -145,13 +145,13 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
             const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ email: user._json.email }, findExistingData, "SchedulesUsers", false);
 
             if (updateExistingData) {
-                res.redirect("/home");
+                res.redirect("localhost:3000/home");
             } else {
-                res.redirect("/login");
+                res.redirect("localhost:3000/login");
             }
         }
     } else {
-        res.redirect("/login");
+        res.redirect("localhost:3000/login");
     }
 });
 
