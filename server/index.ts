@@ -1,3 +1,30 @@
+/**
+ * FILEPATH: c:\Users\theli\Documents\Visual-Studio-Projects\React-HTML\Schedules-MAIN\server\index.ts
+ * 
+ * This file contains the server-side code for the Schedules application. It initializes the Express app, connects to MongoDB, and sets up authentication with Google OAuth2. It also defines API endpoints for saving user schedule data.
+ * 
+ * Libraries used: 
+ * - body-parser
+ * - connect-mongodb-session
+ * - cors
+ * - express
+ * - express-session
+ * - mongoose
+ * - passport
+ * - passport-google-oauth20
+ * 
+ * Modules used:
+ * - encryption.ts
+ * - mongoDB.ts
+ * 
+ * Global variables:
+ * - userDataID: string
+ * 
+ * API endpoints:
+ * - GET /auth/google
+ * - GET /auth/google/callback
+ * - POST /api/saveperiods
+ */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // Libraries
 import bodyParser from "body-parser";

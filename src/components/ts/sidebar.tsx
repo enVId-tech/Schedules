@@ -2,10 +2,18 @@ import React, { useEffect, useState } from 'react';
 import LoadInStudentData from './getstudentdata.ts';
 import { logOut } from './logout.ts';
 
+/**
+ * Sidebar component that displays user information and navigation menu.
+ * @returns React functional component
+ */
 const Sidebar: React.FC = () => {
+    // State variables for user information
     const [firstName, setFirstName] = useState<string>("")
     const [userImg, setUserImg] = useState<string>("")
 
+    /**
+     * Loads in student data and sets state variables for user information.
+     */
     useEffect(() => {
         const loadInData = async () => {
             const data = await LoadInStudentData();
@@ -15,10 +23,18 @@ const Sidebar: React.FC = () => {
         loadInData();
     }, [])
 
+    /**
+     * Redirects to a different page.
+     * @param page - URL of the page to redirect to
+     */
     const moveToDifferentFile: (page: string) => void = (page: string) => {
         window.location.href = page;
     }
 
+    /**
+     * Renders the Sidebar component.
+     * @returns JSX element
+     */
     return (
         <div id="Sidebar">
             <div id="Logo">

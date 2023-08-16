@@ -1,3 +1,12 @@
+/**
+ * FILEPATH: c:\Users\theli\Documents\Visual-Studio-Projects\React-HTML\Schedules-MAIN\src\components\scss\home.scss
+ * 
+ * This file contains the styling for the home page of the Schedules application.
+ * It includes styles for the main container, student cards, sidebar, menu, and schedules page.
+ * 
+ * @author 
+ * @version 1.0
+ */
 #Schedules {
     font-family: Work Sans, sans-serif;
     display: flex;
@@ -170,6 +179,20 @@
 
 /* Login Page */
 
+/**
+ * FILEPATH: c:\Users\theli\Documents\Visual-Studio-Projects\React-HTML\Schedules-MAIN\src\components\scss\home.scss
+ * 
+ * This file contains the styling for the login page, desktop top navigation, and full schedule modal.
+ * 
+ * The login page is styled with a fixed position, a dark background color, and a login container with a background image.
+ * The input fields for the username and password have a transparent background and a white border, with a blue selection color.
+ * The Google sign-in button has a transparent background and white text.
+ * The profile button has a white background and black text on hover.
+ * 
+ * The desktop top navigation has a fixed position and a dark background color, with white text buttons.
+ * 
+ * The full schedule modal has a dark background color and a rounded border, with a student name and period information displayed.
+ */
 #loginpage {
     position: fixed;
     top: 0;
@@ -663,6 +686,21 @@
 
 // Settings Page
 
+/**
+ * FILEPATH: c:\Users\theli\Documents\Visual-Studio-Projects\React-HTML\Schedules-MAIN\src\components\scss\home.scss
+ * 
+ * Styles for the #settingspage component.
+ * 
+ * The #settingspage component is a fixed position container that covers the entire viewport. It contains a form for editing user settings.
+ * 
+ * The form is centered vertically and horizontally within the container. The form items are displayed in a column and are centered horizontally.
+ * 
+ * The form items are styled as .SettingItem and are displayed as a row with a label on the left and an input on the right. The input is a text input with a black border and white text. When the input is selected, the background color changes to gray and the text color changes to white.
+ * 
+ * The form also contains a Save button that is styled as #SaveSettingsButton. The button has a transparent background with a white border and white text. When hovered over, the background color changes to green.
+ * 
+ * The font used throughout the component is 'Work Sans', sans-serif.
+ */
 #settingspage {
     position: fixed;
     top: 0;

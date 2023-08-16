@@ -1,3 +1,7 @@
+/**
+ * HomeContent component that displays the student's schedule and allows them to select their teachers for each period.
+ * @returns JSX.Element
+ */
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/ts/sidebar.tsx';
 
