@@ -477,7 +477,7 @@
 
 #homepage-content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     grid-template-rows: 1fr;
     align-content: center;
     align-items: center;
@@ -502,7 +502,8 @@
 
 #YourPeriods {
     height: 75vh;
-    width: 30vw;
+    //width: 30vw;
+    width: 60vw;
     background-color: rgba(36, 36, 36, 0.8);
     margin-left: 1vw;
     margin-right: 1vw;
@@ -551,7 +552,8 @@
     display: inline-grid;
     grid-template-columns: 5vw 1fr;
     grid-template-rows: 1fr;
-    width: 27vw;
+    //width: 27vw;
+    width: 55vw;
     align-content: center;
     align-items: center;
     margin-top: 0.5vh;
@@ -574,8 +576,10 @@
     color: white;
     font-size: 2vw;
     height: 5vh;
-    width: 21vw;
+    //width: 21vw;
+    width: 49vw;
     font-family: Work Sans, sans-serif;
+    text-align: center;
 }
 
 .PeriodInput:focus {

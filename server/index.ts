@@ -37,7 +37,6 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import path from 'path';
 import { fileURLToPath } from 'url';
-import "./configs/db.ts";
 import { CLIENT_DB, CLIENT_ID, CLIENT_SECRET, SERVER_PORT } from "./configs/env.ts";
 import encrypts from "./modules/encryption.ts";
 import mongoFuncs from "./modules/mongoDB.ts";
@@ -160,9 +159,9 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
             const write = await mongoFuncs.writeToDatabase(newUser, "SchedulesUsers", false) || false;
 
             if (write) {
-                res.redirect("localhost:3000/home");
+                res.redirect("http://127.0.0.1:3000/home");
             } else {
-                res.redirect("localhost:3000/login");
+                res.redirect("http://127.0.0.1:3000/login");
             }
         } else {
             const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { email: user._json.email }));
@@ -172,13 +171,13 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
             const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ email: user._json.email }, findExistingData, "SchedulesUsers", false);
 
             if (updateExistingData) {
-                res.redirect("localhost:3000/home");
+                res.redirect("http://127.0.0.1:3000/home");
             } else {
-                res.redirect("localhost:3000/login");
+                res.redirect("http://127.0.0.1:3000/login");
             }
         }
     } else {
-        res.redirect("localhost:3000/login");
+        res.redirect("http://127.0.0.1:3000/login");
     }
 });
 
@@ -268,15 +267,19 @@ app.get('/api/getallusersettings', async (req: Request, res: Response) => {
 });
 
 app.post('/api/savesettings', async (req: Request, res: Response) => {
+    try {
     const data: any = req.body;
 
-    const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: userDataID }));
+    const findExistingData: any = await JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: userDataID }));
 
     findExistingData.firstName = data.firstName;
     findExistingData.lastName = data.lastName;
     findExistingData.displayName = data.firstName + " " + data.lastName;
     findExistingData.siteUsername = data.username;
     findExistingData.settings.visible = data.visible;
+    if (findExistingData.settings.grade !== data.grade) {
+        findExistingData.schedule = [];
+    }
     findExistingData.settings.grade = data.grade;
     if (data.password !== "") {
         findExistingData.sitePassword = encrypts.permanentEncryptPassword(data.password);
@@ -289,6 +292,10 @@ app.post('/api/savesettings', async (req: Request, res: Response) => {
     if (updateExistingData) {
         res.sendStatus(200);
     } else {
+        res.sendStatus(500);
+    }
+    } catch (err) {
+        console.error("\x1b[31m", err);
         res.sendStatus(500);
     }
 });

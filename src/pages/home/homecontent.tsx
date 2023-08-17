@@ -177,19 +177,21 @@ const HomeContent: React.FC = () => {
                             </span>
                             
                         </div>
-                        <div id="PeriodsRecent">
-                            <span id="Visited">
-                                <h1 id="VisitedRecent">
-                                    Recently Visited Periods
-                                </h1>
-                            </span>
-                            <span id="Saved">
-                                <h1 id="SavedRecent">
-                                    Saved Periods
-                                </h1>
-                            </span>
-                        </div>
-                        <h1 id="Disclaimer">Missing any periods? Send me a message at 'envid_' on discord!</h1>
+                        {//<div id="PeriodsRecent">
+                        //    <span id="Visited">
+                        //        <h1 id="VisitedRecent">
+                        //            Recently Visited Periods
+                        //        </h1>
+                        //    </span>
+                        //    <span id="Saved">
+                        //        <h1 id="SavedRecent">
+                        //            Saved Periods
+                        //        </h1>
+                        //    </span>
+                        //</div> 
+                        }
+                        <br />
+                        <h1 id="Disclaimer">Missing any periods? Send me a message at 'envidtech' on discord!</h1>
                     </span>
                 </div>
             </span>
