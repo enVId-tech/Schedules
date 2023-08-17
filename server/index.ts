@@ -159,9 +159,11 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
             const write = await mongoFuncs.writeToDatabase(newUser, "SchedulesUsers", false) || false;
 
             if (write) {
-                res.redirect("http://127.0.0.1:3000/home");
+                //res.redirect("http://127.0.0.1:3000/home");
+                res.redirect("/home");
             } else {
-                res.redirect("http://127.0.0.1:3000/login");
+                //res.redirect("http://127.0.0.1:3000/login");
+                res.redirect("/login");
             }
         } else {
             const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { email: user._json.email }));
@@ -171,13 +173,16 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
             const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ email: user._json.email }, findExistingData, "SchedulesUsers", false);
 
             if (updateExistingData) {
-                res.redirect("http://127.0.0.1:3000/home");
+                //res.redirect("http://127.0.0.1:3000/home");
+                res.redirect("/home");
             } else {
-                res.redirect("http://127.0.0.1:3000/login");
+                //res.redirect("http://127.0.0.1:3000/login");
+                res.redirect("/login");
             }
         }
     } else {
-        res.redirect("http://127.0.0.1:3000/login");
+        //res.redirect("http://127.0.0.1:3000/login");
+        res.redirect("/login");
     }
 });
 
