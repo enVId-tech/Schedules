@@ -55,8 +55,11 @@ const SchedulesPage: React.FC = () => {
     }
 
     const createFullSchedules = (i: number) => {
+        const defaultStyle = {
+            display: 'none'
+        };
         return (
-            <div id="FullSchedules" className={`Student${students[i].studentID}`}>
+            <div id="FullSchedules" className={`Student${students[i].studentID}`} style={defaultStyle}>
                 <div id="fullpageschedule">
                     {
                         <div className="StudentFull" key={i}>

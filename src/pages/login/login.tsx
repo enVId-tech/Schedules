@@ -18,7 +18,7 @@ const LoginPage: React.FC = () => {
                     <br /><br />
                     <LoginForm />
                     <br />
-                    <h1 id="LoginLabel">Development Version 0.1.10, Alpha</h1>
+                    <h1 id="LoginLabel">Development Build 0.1.11, Beta</h1>
                 </div>
             </div>
         </HelmetProvider>

@@ -390,11 +390,11 @@ app.get('/student/data/logout', async (req: Request, res: Response) => {
 // Use the code below for your build.
 // IMPORTANT: Make sure that this code is placed AFTER the /google/auth (or equivalent) and /google/auth/callback (or equivalent) route.
 
-app.use(express.static(path.join(__dirname, '..', 'build')));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Handle all other routes by serving the 'index.html' file
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
 app.listen(SERVER_PORT, () => {

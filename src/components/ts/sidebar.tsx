@@ -11,6 +11,8 @@ const Sidebar: React.FC = () => {
     const [firstName, setFirstName] = useState<string>("")
     const [userImg, setUserImg] = useState<string>("")
 
+    const [menuItems, setMenuItems] = useState<Array<string>>(["Home", "Schedules", "Settings", "Log Out"]);
+
     /**
      * Loads in student data and sets state variables for user information.
      */
@@ -44,19 +46,21 @@ const Sidebar: React.FC = () => {
             <hr />
             <div id="Menu">
                 <div className="MenuItem" id="HomeSidebar" onClick={() => moveToDifferentFile('/')}>
-                    <h2 className="MenuText">Home</h2>
+                    <h2 className="MenuText">
+                        {menuItems[0]}
+                    </h2>
                 </div>
                 <div className="MenuItem" id="SchedulesListSidebar" onClick={() => moveToDifferentFile('/schedules')}>
-                    <h2 className="MenuText">Schedules</h2>
+                    <h2 className="MenuText">{menuItems[1]}</h2>
                 </div>
                 <div className="MenuItem" id="SettingsSidebar" onClick={() => moveToDifferentFile('/settings')}>
-                    <h2 className="MenuText">Settings</h2>
+                    <h2 className="MenuText">{menuItems[2]}</h2>
                 </div>
                 <div className="MenuItem" id="LogOutSidebar">
-                    <h2 className="MenuText" onClick={() => logOut()}>Log Out</h2>
+                    <h2 className="MenuText" onClick={() => logOut()}>{menuItems[3]}</h2>
                 </div>
             </div>
-            <h1 className='MenuText'>Alpha Build, <br />0.1.10,<br /> Development Release</h1>
+            <h1 className='MenuText'>Beta <br />0.1.11,<br /> Development Build</h1>
         </div>
     )
 }
