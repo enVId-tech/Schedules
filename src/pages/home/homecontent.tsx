@@ -48,6 +48,7 @@ const HomeContent: React.FC = () => {
         const fetchData = await fetch('/api/getstudentschedules', data);
         const response = await fetchData.json();
 
+
         if (response.error) {
             console.error(response.error);
             throw new Error(response.error);
@@ -87,22 +88,30 @@ const HomeContent: React.FC = () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ currentGrade, periods }) as unknown as BodyInit
-
         }
 
         const fetchData = await fetch('/api/saveperiods', data);
+        const response = await fetchData.json();
 
-        if (fetchData.status !== 200) {
-            alert('There was an error saving your periods. Please try again later.');
+        if (response.error) {
+            console.error(response.error);
+            alert('There was an error saving your periods.');
+            throw new Error(response.error);
         }
+
+        alert('Saved!');
     }
 
     const getPeriods: () => void = async () => {
         try {
             const fetchData = await fetch('/api/getteachers');
-            const response = await fetchData.json();
 
-            setPeriods(response);
+            if (fetchData.status !== 200) {
+                throw new Error('There was an error fetching the teachers.');
+            } else {
+                const response = await fetchData.json();
+                setPeriods(response);
+            }
         } catch (error) {
             console.log(error);
         }

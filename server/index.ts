@@ -37,9 +37,15 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { CLIENT_DB, CLIENT_ID, CLIENT_SECRET, SERVER_PORT } from "./configs/env.ts";
-import encrypts from "./modules/encryption.ts";
-import mongoFuncs from "./modules/mongoDB.ts";
+import { CLIENT_DB, CLIENT_ID, CLIENT_SECRET, SERVER_PORT } from "./configs/env.js";
+import encrypts from "./modules/encryption.js";
+import mongoFuncs from "./modules/mongoDB.js";
+
+declare module "express-session" {
+    interface Session {
+        dataIDNumber?: string;
+    }
+}
 
 // File Path Initialization
 const __filename = fileURLToPath(import.meta.url);
@@ -56,7 +62,6 @@ app.set('trust proxy', true);
 const SECRET: string = encrypts.permanentEncryptPassword(encrypts.generateRandomNumber(256, "alphanumeric"))
 
 // Globals
-var userDataID: string = "";
 
 // MongoDB Credentials
 const MongoDBStore = connectMongoDBSession(session);
@@ -88,6 +93,7 @@ passport.use(
         {
             clientID: CLIENT_ID,
             clientSecret: CLIENT_SECRET,
+            //callbackURL: "http://etrecore.csproject.org:19638/auth/google/callback"
             callbackURL: "http://127.0.0.1:3001/auth/google/callback"
         },
         (accessToken, refreshToken, profile, done) => {
@@ -117,7 +123,7 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
         // Generate a random 64 bit string that's also encrypted
         const dataIDRandom: string = encrypts.permanentEncryptPassword(encrypts.generateRandomNumber(64, "alphanumeric"));
 
-        userDataID = dataIDRandom;
+        req.session.dataIDNumber = dataIDRandom;
 
         const fileData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", true, { email: user._json.email })) || -1;
 
@@ -170,9 +176,9 @@ app.get("/auth/google/callback", passport.authenticate("google", { failureRedire
 
             findExistingData.dataIDNumber = dataIDRandom;
 
-            const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ email: user._json.email }, findExistingData, "SchedulesUsers", false);
+            const updateExistingData: number = await mongoFuncs.modifyInDatabase({ email: user._json.email }, findExistingData, "SchedulesUsers", false);
 
-            if (updateExistingData) {
+            if (updateExistingData > 0) {
                 //res.redirect("http://127.0.0.1:3000/home");
                 res.redirect("/home");
             } else {
@@ -190,25 +196,20 @@ app.post('/api/saveperiods', async (req: Request, res: Response) => {
     try {
         const data: any = req.body;
 
-        const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: userDataID }));
+        const findExistingData: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: req.session.dataIDNumber })); // Use session dataIDNumber
 
         findExistingData.schedule = data.periods;
         findExistingData.settings.grade = data.currentGrade;
 
-        const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ dataIDNumber: userDataID }, findExistingData, "SchedulesUsers", false);
+        const updateExistingData: number = await mongoFuncs.modifyInDatabase({ dataIDNumber: req.session.dataIDNumber }, findExistingData, "SchedulesUsers", false);
 
-        if (updateExistingData) {
-            res.sendStatus(200);
-        } else {
-            res.sendStatus(500);
-        }
+        res.send({ numberUpdated: updateExistingData });
     } catch (err) {
-        res.sendStatus(500);
+        res.send({ error: err })
     }
 });
-
 app.get("/api/getstudentdata", async (req: Request, res: Response) => {
-    const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: userDataID }));
+    const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: req.session.dataIDNumber }));
     res.send(data);
 });
 
@@ -249,7 +250,7 @@ app.get("/api/getstudentschedules", async (req: Request, res: Response) => {
 });
 
 app.get('/api/getallusersettings', async (req: Request, res: Response) => {
-    const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: userDataID }));
+    const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: req.session.dataIDNumber }));
 
     let newData: any[] = [];
 
@@ -273,32 +274,32 @@ app.get('/api/getallusersettings', async (req: Request, res: Response) => {
 
 app.post('/api/savesettings', async (req: Request, res: Response) => {
     try {
-    const data: any = req.body;
+        const data: any = req.body;
 
-    const findExistingData: any = await JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: userDataID }));
+        const findExistingData: any = await JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: req.session.dataIDNumber }));
 
-    findExistingData.firstName = data.firstName;
-    findExistingData.lastName = data.lastName;
-    findExistingData.displayName = data.firstName + " " + data.lastName;
-    findExistingData.siteUsername = data.username;
-    findExistingData.settings.visible = data.visible;
-    if (findExistingData.settings.grade !== data.grade) {
-        findExistingData.schedule = [];
-    }
-    findExistingData.settings.grade = data.grade;
-    if (data.password !== "") {
-        findExistingData.sitePassword = encrypts.permanentEncryptPassword(data.password);
-    } else {
-        findExistingData.sitePassword = "null";
-    }
+        findExistingData.firstName = data.firstName;
+        findExistingData.lastName = data.lastName;
+        findExistingData.displayName = data.firstName + " " + data.lastName;
+        findExistingData.siteUsername = data.username;
+        findExistingData.settings.visible = data.visible;
+        if (Number(findExistingData.settings.grade) !== Number(data.grade)) {
+            findExistingData.schedule = [];
+        }
+        findExistingData.settings.grade = data.grade;
+        if (data.password !== "") {
+            findExistingData.sitePassword = encrypts.permanentEncryptPassword(data.password);
+        } else {
+            findExistingData.sitePassword = "null";
+        }
 
-    const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ dataIDNumber: userDataID }, findExistingData, "SchedulesUsers", false);
+        const updateExistingData: number = await mongoFuncs.modifyInDatabase({ dataIDNumber: req.session.dataIDNumber }, findExistingData, "SchedulesUsers", false);
 
-    if (updateExistingData) {
-        res.sendStatus(200);
-    } else {
-        res.sendStatus(500);
-    }
+        if (updateExistingData > 0) {
+            res.sendStatus(200);
+        } else {
+            res.sendStatus(500);
+        }
     } catch (err) {
         console.error("\x1b[31m", err);
         res.sendStatus(500);
@@ -318,11 +319,11 @@ app.post('/user/login', async (req: Request, res: Response) => {
                 if (await encrypts.comparePassword(data.password, findExistingData.sitePassword)) {
                     findExistingData.dataIDNumber = encrypts.generateRandomNumber(64, "alphanumeric");
 
-                    userDataID = findExistingData.dataIDNumber;
+                    req.session.dataIDNumber = findExistingData.dataIDNumber;
 
-                    const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ siteUsername: data.username }, findExistingData, "SchedulesUsers", false);
+                    const updateExistingData: number = await mongoFuncs.modifyInDatabase({ siteUsername: data.username }, findExistingData, "SchedulesUsers", false);
 
-                    if (updateExistingData) {
+                    if (updateExistingData > 0) {
                         const sessionData = {
                             secret: SECRET,
                             resave: true, // Set to true to ensure session is saved on every request
@@ -343,6 +344,8 @@ app.post('/user/login', async (req: Request, res: Response) => {
 
                         app.use(session(sessionData));
 
+                        req.session.dataIDNumber = findExistingData.dataIDNumber;
+
                         res.sendStatus(200);
                     } else {
                         res.sendStatus(500);
@@ -360,7 +363,14 @@ app.post('/user/login', async (req: Request, res: Response) => {
 });
 
 app.get('/student/data/logout', async (req: Request, res: Response) => {
+    try {
     await mongoFuncs.deleteFromDatabase({ _id: req.sessionID }, "SchedulesSessions", "one", false);
+
+    const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: req.session.dataIDNumber }));
+
+    data.dataIDNumber = "";
+
+    const updateExistingData: number = await mongoFuncs.modifyInDatabase({ dataIDNumber: req.session.dataIDNumber }, data, "SchedulesUsers", false);
 
     req.session.destroy((err: any) => {
         if (err) {
@@ -368,16 +378,11 @@ app.get('/student/data/logout', async (req: Request, res: Response) => {
         }
     });
 
-    const data: any = JSON.parse(await mongoFuncs.getItemsFromDatabase("SchedulesUsers", false, { dataIDNumber: userDataID }));
-
-    data.dataIDNumber = "";
-
-    const updateExistingData: boolean = await mongoFuncs.modifyInDatabase({ dataIDNumber: userDataID }, data, "SchedulesUsers", false);
-
-    userDataID = "";
-
-    if (updateExistingData) {
+    if (updateExistingData > 0) {
         res.sendStatus(200);
+    }
+    } catch (err) {
+        res.sendStatus(500);
     }
 });
 
@@ -385,11 +390,11 @@ app.get('/student/data/logout', async (req: Request, res: Response) => {
 // Use the code below for your build.
 // IMPORTANT: Make sure that this code is placed AFTER the /google/auth (or equivalent) and /google/auth/callback (or equivalent) route.
 
-app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use(express.static(path.join(__dirname, '..', 'build')));
 
 // Handle all other routes by serving the 'index.html' file
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
 });
 
 app.listen(SERVER_PORT, () => {

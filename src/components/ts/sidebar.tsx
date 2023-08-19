@@ -56,6 +56,7 @@ const Sidebar: React.FC = () => {
                     <h2 className="MenuText" onClick={() => logOut()}>Log Out</h2>
                 </div>
             </div>
+            <h1 className='MenuText'>Alpha Build, <br />0.1.10,<br /> Development Release</h1>
         </div>
     )
 }

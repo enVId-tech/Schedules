@@ -71,7 +71,7 @@ async function modifyInDatabase(
   update: any, // Change to a more specific type if possible
   collectionName: string,
   log?: boolean
-): Promise<boolean> {
+): Promise<number> {
   try {
     await connectToDatabase(log);
 
@@ -88,7 +88,7 @@ async function modifyInDatabase(
       console.log("\x1b[32m", "No documents modified");
     }
 
-    return result.modifiedCount > 0;
+    return result.modifiedCount;
   } catch (error: any) {
     console.error("\x1b[31m", `Error modifying document:, ${error}`);
     throw new Error(error);
