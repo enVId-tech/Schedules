@@ -148,3 +148,6 @@ server/configs/credentials.env.local
 build
 noderun.bat
 reactrun.bat
+
+.idea
+.idea/*

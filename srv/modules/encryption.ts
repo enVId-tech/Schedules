@@ -63,7 +63,7 @@ async function encryptPassword(myPlaintextPassword: string, saltRounds: number =
     const hash: string = await bcrypt.hash(myPlaintextPassword, saltRounds);
     return hash;
   } catch (error: any) {
-    console.error("\x1b[31m", error);
+    console.error("\x1b[31m", error as string);
     throw new Error(error);
   }
 }
@@ -80,7 +80,7 @@ function permanentEncryptPassword(myPlaintextPassword: string): string {
     const digest: string = data.digest('hex');
     return digest;
   } catch (error: any) {
-    console.error("\x1b[31m", error);
+    console.error("\x1b[31m", error as string);
     throw new Error(error);
   }
 }
@@ -101,7 +101,7 @@ async function comparePassword(password: string, hashedPassword: string): Promis
       return false;
     }
   } catch (error: any) {
-    console.error("\x1b[31m", error);
+    console.error("\x1b[31m", error as string);
     throw new Error(error);
   }
 }
@@ -124,15 +124,15 @@ async function encryptData(
       encryptionAlg || 'aes-256-gcm';
 
     const cipher: crypto.CipherGCM = crypto.createCipheriv(encryptionAlgorithm, encryptionKey, iv);
-    let encryptedData = cipher.update(newData, 'utf8', 'hex');
+    let encryptedData: string = cipher.update(newData, 'utf8', 'hex');
     encryptedData += cipher.final('hex');
 
     // Get the authentication tag
-    const authTag = cipher.getAuthTag();
+    const authTag: Buffer = cipher.getAuthTag();
 
     return { encryptedData, authTag };
   } catch (error: any) {
-    console.error("\x1b[31m", error);
+    console.error("\x1b[31m", error as string);
     throw new Error(error);
   }
 }
@@ -147,11 +147,11 @@ async function decryptData(encryptedData: string, authTag: Buffer): Promise<stri
   try {
     const decipher = crypto.createDecipheriv('aes-256-gcm', encryptionKey, iv);
     decipher.setAuthTag(authTag);
-    let decryptedData = decipher.update(encryptedData, 'hex', 'utf8');
+    let decryptedData: string = decipher.update(encryptedData, 'hex', 'utf8');
     decryptedData += decipher.final('utf8');
     return decryptedData;
   } catch (error: any) {
-    console.error("\x1b[31m", error);
+    console.error("\x1b[31m", error as string);
     throw new Error(error);
   }
 }
@@ -165,7 +165,7 @@ function encryptIP(ip: string): string {
   try {
   return ip.split('.').map(part => parseInt(part, 10).toString(16)).join('');
   } catch (error: any) {
-    console.error("\x1b[31m", error);
+    console.error("\x1b[31m", error as string);
     throw new Error(error);
   }
 }

@@ -93,8 +93,8 @@ passport.use(
         {
             clientID: CLIENT_ID,
             clientSecret: CLIENT_SECRET,
-            //callbackURL: "http://etrecore.csproject.org:19638/auth/google/callback"
-            callbackURL: "http://127.0.0.1:3001/auth/google/callback"
+            callbackURL: "http://etrecore.csproject.org:19638/auth/google/callback"
+            //callbackURL: "http://127.0.0.1:3001/auth/google/callback"
         },
         (accessToken, refreshToken, profile, done) => {
             return done(null, profile);

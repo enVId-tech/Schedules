@@ -17,7 +17,7 @@ async function connectToDatabase(log?: boolean): Promise<void> {
     }
   } catch (error: any) {
     console.error(`Error connecting to MongoDB:${error}`);
-    throw new Error(error);
+    throw new Error(error as string);
   }
 }
 
