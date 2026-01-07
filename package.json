@@ -10,7 +10,7 @@
     "@types/passport-google-oauth": "^1.0.45",
     "@types/passport-google-oauth20": "^2.0.17",
     "bcrypt": "^6.0.0",
-    "body-parser": "^2.2.1",
+    "body-parser": "^2.2.2",
     "bootstrap": "^5.3.8",
     "connect-mongodb-session": "^5.0.0",
     "cors": "^2.8.5",
@@ -18,17 +18,17 @@
     "dotenv": "^17.2.3",
     "express-session": "^1.18.2",
     "mongodb": "^7.0.0",
-    "mongoose": "^9.0.0",
-    "npm-check-updates": "^19.1.2",
+    "mongoose": "^9.1.2",
+    "npm-check-updates": "^19.3.1",
     "passport": "^0.7.0",
     "passport-google-oauth": "^2.0.0",
     "passport-google-oauth2": "^0.2.0",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "react-helmet-async": "^2.0.5",
-    "react-router-dom": "^7.10.0",
+    "react-router-dom": "^7.11.0",
     "react-scripts": "5.0.1",
-    "sass": "^1.94.2",
+    "sass": "^1.97.2",
     "typescript": "^5.9.3"
   },
   "scripts": {
@@ -37,7 +37,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "serverstart": "nodemon --exec ts-node --esm server/index.ts",
-    "ncu": "ncu -u && npm install --force"
+    "ncu": "npx npm-check-updates -u && npm install --force"
   },
   "eslintConfig": {
     "extends": [
