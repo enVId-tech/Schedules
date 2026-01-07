@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 
-const encryptionKey: Buffer = crypto.scryptSync('passphrase', 'salt', 32); // Deriving a secure encryption key using scrypt
-const iv: Buffer = crypto.randomBytes(16); // 16 bytes for AES-256-GCM
+const encryptionKey: crypto.CipherKey = new Uint8Array(crypto.scryptSync('passphrase', 'salt', 32)); // Deriving a secure encryption key using scrypt
+const iv: crypto.BinaryLike = new Uint8Array(crypto.randomBytes(16)); // 16 bytes for AES-256-GCM
 
 type GenerationType = 'number' | 'string' | 'alphanumeric' | 'both';
 
@@ -146,7 +146,7 @@ async function encryptData(
 async function decryptData(encryptedData: string, authTag: Buffer): Promise<string> {
   try {
     const decipher = crypto.createDecipheriv('aes-256-gcm', encryptionKey, iv);
-    decipher.setAuthTag(authTag);
+    decipher.setAuthTag(new Uint8Array(authTag));
     let decryptedData: string = decipher.update(encryptedData, 'hex', 'utf8');
     decryptedData += decipher.final('utf8');
     return decryptedData;
